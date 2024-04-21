@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCD Simulator GUI", "LCDSimulator.GUI\LCDSimulator.GUI.csproj", "{359057FB-D1F3-40BB-AF3F-E7BEF8C6A3A6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{359057FB-D1F3-40BB-AF3F-E7BEF8C6A3A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{359057FB-D1F3-40BB-AF3F-E7BEF8C6A3A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{359057FB-D1F3-40BB-AF3F-E7BEF8C6A3A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{359057FB-D1F3-40BB-AF3F-E7BEF8C6A3A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9067BD24-C3AE-49F1-8070-2CB694A6B9D8}
+	EndGlobalSection
+EndGlobal
