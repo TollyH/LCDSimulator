@@ -24,7 +24,7 @@ namespace LCDSimulator.GUI.Controls
 
         public double CalculateOpacity(bool active)
         {
-            return Math.Clamp((active ? 0.75 : 0.25) + Contrast, 0, 1);
+            return Math.Clamp((active ? 0.9 : 0.1) + Contrast, 0, 1);
         }
 
         public void UpdateCharacter()
