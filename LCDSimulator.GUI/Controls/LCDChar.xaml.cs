@@ -9,15 +9,19 @@ namespace LCDSimulator.GUI.Controls
     public partial class LCDChar : UserControl
     {
         public bool[,] Dots { get; }
-        public double Contrast { get; set; }
+
+        private double _contrast = 0.0f;
+        public double Contrast
+        {
+            get => _contrast;
+            set => _contrast = Math.Clamp(value, -1, 1);
+        }
 
         public LCDChar()
         {
             InitializeComponent();
 
             Dots = new bool[5, 8];
-
-            Contrast = -1.0f;
 
             UpdateCharacter();
         }
