@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace LCDSimulator.GUI
 {
@@ -8,11 +9,22 @@ namespace LCDSimulator.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public int ScreenWidth { get; private set; }
+        public int ScreenHeight { get; private set; }
+
+        public Brush ScreenForeground { get; private set; }
+        public Brush ScreenBackground { get; private set; }
+
         private bool runUncheckHandler = true;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            MenuItem firstColorItem = colorMenu.Items.OfType<MenuItem>().First();
+
+            ScreenForeground = firstColorItem.Foreground;
+            ScreenBackground = firstColorItem.Background;
         }
 
         public void UpdateScreenSize(int width, int height)
@@ -36,6 +48,27 @@ namespace LCDSimulator.GUI
                 }
                 _ = screenPanel.Children.Add(line);
             }
+
+            UpdateScreenColor(ScreenForeground, ScreenBackground);
+
+            ScreenWidth = width;
+            ScreenHeight = height;
+        }
+
+        public void UpdateScreenColor(Brush foreground, Brush background)
+        {
+            screenBorder.Background = background;
+
+            foreach (StackPanel line in screenPanel.Children.OfType<StackPanel>())
+            {
+                foreach (Controls.LCDChar lcdChar in line.Children.OfType<Controls.LCDChar>())
+                {
+                    lcdChar.Foreground = foreground;
+                }
+            }
+
+            ScreenForeground = foreground;
+            ScreenBackground = background;
         }
 
         private void SizeMenuItem_Checked(object sender, RoutedEventArgs e)
@@ -53,9 +86,23 @@ namespace LCDSimulator.GUI
             }
         }
 
-        private void SizeMenuItem_Unchecked(object sender, RoutedEventArgs e)
+        private void ColorMenuItem_Checked(object sender, RoutedEventArgs e)
         {
-            // One size menu item must always be checked
+            runUncheckHandler = false;
+            foreach (MenuItem item in colorMenu.Items.OfType<MenuItem>())
+            {
+                item.IsChecked = ReferenceEquals(item, sender);
+            }
+            runUncheckHandler = true;
+            if (sender is MenuItem selectedItem)
+            {
+                UpdateScreenColor(selectedItem.Foreground, selectedItem.Background);
+            }
+        }
+
+        private void MenuItem_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // One item of this menu must always be checked
             if (runUncheckHandler && sender is MenuItem item)
             {
                 item.IsChecked = true;
@@ -64,6 +111,7 @@ namespace LCDSimulator.GUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            colorMenu.Items.OfType<MenuItem>().First().IsChecked = true;
             sizeMenu.Items.OfType<MenuItem>().First().IsChecked = true;
         }
     }

@@ -14,25 +14,34 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" VerticalAlignment="Top">
             <MenuItem x:Name="sizeMenu" Header="Screen Size">
-                <MenuItem Header="8x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="8x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="8x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="16x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="16x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="16x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="20x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="20x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="20x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="24x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="24x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="32x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="32x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="40x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
-                <MenuItem Header="40x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="8x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="8x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="8x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="16x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="16x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="16x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="20x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="20x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="20x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="24x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="24x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="32x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="32x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="40x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="40x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+            </MenuItem>
+            <MenuItem x:Name="colorMenu" Header="Screen Color">
+                <MenuItem Header="Black on Green" IsCheckable="True" Background="#FFEAF205" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="Black on Gray" IsCheckable="True" Background="#FF9391A3" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="Black on Red" IsCheckable="True" Background="#FFC9000F" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="Black on Light Red" IsCheckable="True" Background="#FFFE6665" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="White on Blue" IsCheckable="True" Background="#FF208AFB" Foreground="#FFE9F7FF" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                <MenuItem Header="Red on Black" IsCheckable="True" Background="#FF1D090A" Foreground="#FFC52128" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
             </MenuItem>
         </Menu>
-        <Border Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9" Background="#FF1EA420">
+        <Border x:Name="screenBorder" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9">
             <StackPanel x:Name="screenPanel"/>
         </Border>
+        <Rectangle Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" x:Name="disabledBacklightOverlay" Fill="#CC000000" Width="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=screenBorder, Mode=OneWay}"/>
     </Grid>
 </Window>
