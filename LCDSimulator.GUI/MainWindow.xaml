@@ -6,14 +6,33 @@
         xmlns:local="clr-namespace:LCDSimulator.GUI"
         xmlns:controls="clr-namespace:LCDSimulator.GUI.Controls"
         mc:Ignorable="d"
-        Title="LCD Simulator" SizeToContent="WidthAndHeight">
+        Title="LCD Simulator" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
     <Grid>
-        <Border VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9" Background="#FF1EA420">
-            <StackPanel x:Name="screenPanel">
-                <StackPanel Orientation="Horizontal">
-                    <controls:LCDChar Margin="0,0,5.1,5.2"/>
-                </StackPanel>
-            </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" VerticalAlignment="Top">
+            <MenuItem x:Name="sizeMenu" Header="Screen Size">
+                <MenuItem Header="8x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="8x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="8x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="16x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="16x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="16x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="20x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="20x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="20x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="24x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="24x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="32x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="32x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="40x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+                <MenuItem Header="40x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="SizeMenuItem_Unchecked"/>
+            </MenuItem>
+        </Menu>
+        <Border Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9" Background="#FF1EA420">
+            <StackPanel x:Name="screenPanel"/>
         </Border>
     </Grid>
 </Window>
