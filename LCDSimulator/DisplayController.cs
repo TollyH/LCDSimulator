@@ -24,7 +24,33 @@
         public byte DataBus { get; set; } = 0;
 
         // Internal State (Inaccessible on a real controller without going through MPU)
-        public byte AddressCounter { get; private set; } = 0;
+        private byte _addressCounter = 0;
+        public byte AddressCounter
+        {
+            get => _addressCounter;
+            private set
+            {
+                if (!AddressingCharacterGeneratorRAM)
+                {
+                    // Wrap around once end of character data is reached
+                    if ((value & 0b1111111) == 0b1111111)
+                    {
+                        value = 79;
+                    }
+                    else if ((value & 0b1111111) >= 80)
+                    {
+                        value = 0;
+                    }
+                    // Move onto next/previous line
+                    if (value is >= 40 and < 64)
+                    {
+                        value = (byte)(IncrementOnReadWrite ? 64 : 39);
+                    }
+                }
+                _addressCounter = value;
+            }
+        }
+
         public bool BusyFlag { get; private set; } = false;
         public byte InstructionRegister { get; private set; } = 0;
         public byte DataRegister { get; private set; } = 0;
