@@ -18,6 +18,14 @@
 
     public class DisplayController
     {
+        public const byte CGRAMAddressMask = 0b111111;
+        public const byte DDRAMAddressMask = 0b1111111;
+
+        public const byte CharactersPerLine = 40;
+        public const byte TotalCharacterCount = CharactersPerLine * 2;
+
+        public const byte SecondLineStartAddress = 64;
+
         // MPU Pins
         public bool RegisterSelect { get; set; } = false;
         public bool ReadWrite { get; set; } = false;
@@ -33,18 +41,18 @@
                 if (!AddressingCharacterGeneratorRAM)
                 {
                     // Wrap around once end of character data is reached
-                    if ((value & 0b1111111) == 0b1111111)
+                    if ((value & DDRAMAddressMask) == DDRAMAddressMask)
                     {
-                        value = 79;
+                        value = TotalCharacterCount - 1;
                     }
-                    else if ((value & 0b1111111) >= 80)
+                    else if ((value & DDRAMAddressMask) >= TotalCharacterCount)
                     {
                         value = 0;
                     }
                     // Move onto next/previous line
-                    if (value is >= 40 and < 64)
+                    if (value is >= CharactersPerLine and < SecondLineStartAddress)
                     {
-                        value = (byte)(IncrementOnReadWrite ? 64 : 39);
+                        value = (byte)(IncrementOnReadWrite ? SecondLineStartAddress : CharactersPerLine - 1);
                     }
                 }
                 _addressCounter = value;
