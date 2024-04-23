@@ -29,7 +29,7 @@
         public byte InstructionRegister { get; private set; } = 0;
         public byte DataRegister { get; private set; } = 0;
 
-        public byte[] DisplayDataRAM { get; } = new byte[80];
+        public DDRAM DisplayDataRAM { get; } = new();
         public byte[] CharacterGeneratorRAM { get; } = new byte[64];
         public byte[] CharacterGeneratorROM { get; } = new byte[4096];
 
