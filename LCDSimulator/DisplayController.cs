@@ -128,12 +128,17 @@
             ClearDisplay();
 
             FourBitMode = false;
+            AwaitingSecondInstruction = false;
+            PendingLowerAddressRead = false;
+
             CurrentDisplayFunction = DisplayFunction.OneLine5x8;
 
             EnabledDisplayComponents = DisplayComponents.None;
 
             IncrementOnReadWrite = true;
             ShiftScreenOnWrite = false;
+
+            DataReadBuffer = BlankCharacter;
         }
 
         public void CycleEnablePin()
