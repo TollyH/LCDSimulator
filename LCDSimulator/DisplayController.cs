@@ -44,9 +44,6 @@
 
         public const byte BlankCharacter = 0x20; // ' '
 
-        public byte CurrentDDRAMAddressLimit => CurrentDisplayFunction == DisplayFunction.TwoLine5x8
-            ? MaximumDDRAMAddress : (byte)(CharactersPerLine - 1);
-
         // MPU Pins
         public bool RegisterSelect { get; set; } = false;
         public bool ReadWrite { get; set; } = false;
@@ -71,7 +68,7 @@
                         value = 0;
                     }
                     // Move onto next/previous line
-                    if (value is >= CharactersPerLine and < SecondLineStartAddress)
+                    if (TwoLineMode && value is >= CharactersPerLine and < SecondLineStartAddress)
                     {
                         value = (byte)(IncrementOnReadWrite ? SecondLineStartAddress : CharactersPerLine - 1);
                     }
@@ -89,6 +86,9 @@
         public byte[] CharacterGeneratorROM { get; } = new byte[4096];
 
         // Simulator Specific Properties
+        public bool TwoLineMode => CurrentDisplayFunction == DisplayFunction.TwoLine5x8;
+        public byte CurrentDDRAMAddressLimit => TwoLineMode ? MaximumDDRAMAddress : (byte)(MaximumCharacterCount - 1);
+
         public bool AddressingCharacterGeneratorRAM { get; private set; } = false;
 
         public DisplayComponents EnabledDisplayComponents { get; private set; } = DisplayComponents.None;
@@ -104,7 +104,8 @@
             get => _displayShiftAmount;
             private set
             {
-                if (value is <= -(sbyte)CharactersPerLine or >= (sbyte)CharactersPerLine)
+                sbyte limit = (sbyte)(TwoLineMode ? CharactersPerLine : MaximumCharacterCount);
+                if (value <= -limit || value >= limit)
                 {
                     value = 0;
                 }
@@ -182,7 +183,7 @@
                 // Read data from RAM
                 DataRegister = AddressingCharacterGeneratorRAM
                     ? CharacterGeneratorRAM[AddressCounter & CGRAMAddressMask]
-                    : DisplayDataRAM[AddressCounter & DDRAMAddressMask];
+                    : DisplayDataRAM[AddressCounter & DDRAMAddressMask, TwoLineMode];
             }
             else
             {
@@ -193,7 +194,7 @@
                 }
                 else
                 {
-                    DisplayDataRAM[AddressCounter & DDRAMAddressMask] = DataRegister;
+                    DisplayDataRAM[AddressCounter & DDRAMAddressMask, TwoLineMode] = DataRegister;
                 }
             }
         }
@@ -260,11 +261,11 @@
         {
             for (int i = 0; i < CharactersPerLine; i++)
             {
-                DisplayDataRAM[i] = BlankCharacter;
+                DisplayDataRAM[i, TwoLineMode] = BlankCharacter;
             }
             for (int i = SecondLineStartAddress; i <= MaximumDDRAMAddress; i++)
             {
-                DisplayDataRAM[i] = BlankCharacter;
+                DisplayDataRAM[i, TwoLineMode] = BlankCharacter;
             }
 
             ReturnHome();
