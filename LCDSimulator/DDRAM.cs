@@ -2,7 +2,7 @@
 {
     public class DDRAM
     {
-        private readonly byte[] data = new byte[DisplayController.TotalCharacterCount];
+        private readonly byte[] data = new byte[DisplayController.MaximumCharacterCount];
 
         public byte this[int address]
         {
@@ -20,7 +20,7 @@
 
         private static void ProcessAddress(ref int address)
         {
-            if (address is < 0 or >= DisplayController.TotalCharacterCount
+            if (address is < 0 or > DisplayController.MaximumDDRAMAddress
                 or (>= DisplayController.CharactersPerLine and < DisplayController.SecondLineStartAddress))
             {
                 throw new IndexOutOfRangeException("Index must be less than 80 and not be between 40 and 64.");
