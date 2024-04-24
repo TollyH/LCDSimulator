@@ -89,6 +89,8 @@
         public bool TwoLineMode => CurrentDisplayFunction == DisplayFunction.TwoLine5x8;
         public byte CurrentDDRAMAddressLimit => TwoLineMode ? MaximumDDRAMAddress : (byte)(MaximumCharacterCount - 1);
 
+        public byte DataReadBuffer { get; private set; } = 0;
+
         public bool AddressingCharacterGeneratorRAM { get; private set; } = false;
 
         public DisplayComponents EnabledDisplayComponents { get; private set; } = DisplayComponents.None;
@@ -114,6 +116,7 @@
         }
 
         public bool AwaitingSecondInstruction { get; private set; } = false;
+        public bool PendingLowerAddressRead { get; private set; } = false;
 
         public DisplayController()
         {
@@ -135,18 +138,29 @@
 
         public void CycleEnablePin()
         {
-            // TODO: 4-bit mode (test effect of changing RS/RW mid-operation)
-
             if (!RegisterSelect && ReadWrite)
             {
-                // Read busy flag and current address - bypasses registers
-                DataBus = (byte)(AddressCounter & DDRAMAddressMask);
+                // Read busy flag and current address
+                byte readValue = (byte)(AddressCounter & DDRAMAddressMask);
                 if (BusyFlag)
                 {
-                    DataBus &= BusyFlagBit;
+                    readValue &= BusyFlagBit;
                 }
+
+                if (FourBitMode)
+                {
+                    DataBus = (byte)((PendingLowerAddressRead ? readValue << 4 : readValue & 0b11110000) | 0b1111);
+                    PendingLowerAddressRead = !PendingLowerAddressRead;
+                }
+                else
+                {
+                    DataBus = readValue;
+                }
+
                 return;
             }
+
+            PendingLowerAddressRead = false;
 
             BusyFlag = true;
 
@@ -154,20 +168,67 @@
             {
                 if (RegisterSelect)
                 {
-                    DataRegister = DataBus;
-                    ProcessDataRegister();
-
-                    IncrementAddressCounter();
-
                     if (ReadWrite)
                     {
-                        DataBus = DataRegister;
+                        ProcessDataRead();
                     }
+                    else
+                    {
+                        if (FourBitMode)
+                        {
+                            // In 4-bit mode, data register is updated one half at a time
+                            if (AwaitingSecondInstruction)
+                            {
+                                DataRegister = (byte)((DataRegister & 0b11110000) | (DataBus >> 4));
+                                ProcessDataWrite();
+                                AwaitingSecondInstruction = false;
+                            }
+                            else
+                            {
+                                DataRegister = (byte)((DataRegister & 0b1111) | (DataBus & 0b11110000));
+                                AwaitingSecondInstruction = true;
+                            }
+                        }
+                        else
+                        {
+                            DataRegister = DataBus;
+                            ProcessDataWrite();
+                        }
+                    }
+
+                    IncrementAddressCounter();
                 }
                 else
                 {
-                    InstructionRegister = DataBus;
-                    ProcessInstructionRegister();
+                    if (FourBitMode)
+                    {
+                        // In 4-bit mode, instruction register is updated one half at a time
+                        if (AwaitingSecondInstruction)
+                        {
+                            InstructionRegister = (byte)((InstructionRegister & 0b11110000) | (DataBus >> 4));
+                            ProcessInstructionRegister();
+                            AwaitingSecondInstruction = false;
+                        }
+                        else
+                        {
+                            InstructionRegister = (byte)((InstructionRegister & 0b1111) | (DataBus & 0b11110000));
+                            AwaitingSecondInstruction = true;
+                        }
+                    }
+                    else
+                    {
+                        InstructionRegister = DataBus;
+                        ProcessInstructionRegister();
+                    }
+                }
+
+                if (!RegisterSelect || !ReadWrite)
+                {
+                    // This simulates the behaviour of real controllers when invalidly performing a
+                    // RAM read operation directly after a RAM write.
+                    DataReadBuffer = AddressingCharacterGeneratorRAM
+                        ? CharacterGeneratorRAM[AddressCounter & CGRAMAddressMask]
+                        : DisplayDataRAM[AddressCounter & DDRAMAddressMask, TwoLineMode];
                 }
             }
             finally
@@ -176,26 +237,28 @@
             }
         }
 
-        private void ProcessDataRegister()
+        private void ProcessDataRead()
         {
-            if (ReadWrite)
+            if (FourBitMode)
             {
-                // Read data from RAM
-                DataRegister = AddressingCharacterGeneratorRAM
-                    ? CharacterGeneratorRAM[AddressCounter & CGRAMAddressMask]
-                    : DisplayDataRAM[AddressCounter & DDRAMAddressMask, TwoLineMode];
+                DataBus = (byte)((AwaitingSecondInstruction ? DataReadBuffer << 4 : DataReadBuffer & 0b11110000) | 0b1111);
+                AwaitingSecondInstruction = !AwaitingSecondInstruction;
             }
             else
             {
-                // Write data to RAM
-                if (AddressingCharacterGeneratorRAM)
-                {
-                    CharacterGeneratorRAM[AddressCounter & CGRAMAddressMask] = DataRegister;
-                }
-                else
-                {
-                    DisplayDataRAM[AddressCounter & DDRAMAddressMask, TwoLineMode] = DataRegister;
-                }
+                DataBus = DataReadBuffer;
+            }
+        }
+
+        private void ProcessDataWrite()
+        {
+            if (AddressingCharacterGeneratorRAM)
+            {
+                CharacterGeneratorRAM[AddressCounter & CGRAMAddressMask] = DataRegister;
+            }
+            else
+            {
+                DisplayDataRAM[AddressCounter & DDRAMAddressMask, TwoLineMode] = DataRegister;
             }
         }
 
