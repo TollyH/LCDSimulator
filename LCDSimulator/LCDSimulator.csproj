@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="CharacterImages\" />
+    <EmbeddedResource Include="CharacterImages\**\*.png" />
   </ItemGroup>
 
 </Project>
