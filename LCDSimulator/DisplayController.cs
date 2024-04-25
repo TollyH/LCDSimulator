@@ -29,7 +29,7 @@
         SetDDRAMAddress = 0b10000000
     }
 
-    public class DisplayController
+    public class DisplayController : IDisposable
     {
         public const byte CGRAMAddressMask = 0b111111;
         public const byte DDRAMAddressMask = 0b1111111;
@@ -118,9 +118,23 @@
         public bool AwaitingSecondInstruction { get; private set; } = false;
         public bool PendingLowerAddressRead { get; private set; } = false;
 
+        private readonly CursorBlink blinkController = new();
+
         public DisplayController()
         {
             Reset();
+        }
+
+        ~DisplayController()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            blinkController.Dispose();
+
+            GC.SuppressFinalize(this);
         }
 
         public void Reset()
