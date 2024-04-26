@@ -18,6 +18,14 @@
             }
         }
 
+        public void Reset()
+        {
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = DisplayController.BlankCharacter;
+            }
+        }
+
         private static void ProcessAddress(ref int address, bool twoLine)
         {
             byte maxAddress = (byte)(twoLine ? DisplayController.MaximumDDRAMAddress : DisplayController.MaximumCharacterCount - 1);

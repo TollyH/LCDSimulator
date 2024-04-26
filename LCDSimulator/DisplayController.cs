@@ -343,14 +343,7 @@
 
         private void ClearDisplay()
         {
-            for (int i = 0; i < CharactersPerLine; i++)
-            {
-                DisplayDataRAM[i, TwoLineMode] = BlankCharacter;
-            }
-            for (int i = SecondLineStartAddress; i <= MaximumDDRAMAddress; i++)
-            {
-                DisplayDataRAM[i, TwoLineMode] = BlankCharacter;
-            }
+            DisplayDataRAM.Reset();
 
             ReturnHome();
 

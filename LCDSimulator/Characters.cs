@@ -8,6 +8,8 @@ namespace LCDSimulator
         public const int MaximumImageWidth = 8;
         public const int MaximumImageHeight = 16;
 
+        public const string ImageExtension = "png";
+
         public static readonly string CharacterRootFolder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "CharacterImages");
 
         public static readonly string[] CharacterImagePaths = new string[256]
@@ -133,11 +135,11 @@ namespace LCDSimulator
             // 0011 1011
             Path.Join("Low", "Semicolon"),
             // 0011 1100
-            Path.Join("Low", "LessThan"),
+            Path.Join("Low", "Less"),
             // 0011 1101
             Path.Join("Low", "Equals"),
             // 0011 1110
-            Path.Join("Low", "GreaterThan"),
+            Path.Join("Low", "Greater"),
             // 0011 1111
             Path.Join("Low", "Question"),
             // 0100 0000
@@ -535,13 +537,14 @@ namespace LCDSimulator
 
             for (int i = 0; i < CharacterImagePaths.Length; i++)
             {
-                GetImageData(CharacterImagePaths[i]).CopyTo(pixelDataTarget, i * pixelDataTarget.Length);
+                byte[] data = GetImageData(Path.ChangeExtension(Path.Join(CharacterRootFolder, CharacterImagePaths[i]), ImageExtension));
+                data.CopyTo(pixelDataTarget, i * data.Length);
             }
         }
 
         private static byte[] GetImageData(string path)
         {
-            using Image<Rgb24> image = Image.Load<Rgb24>(Path.Join(CharacterRootFolder, path));
+            using Image<Rgb24> image = Image.Load<Rgb24>(path);
 
             if (image.Width > MaximumImageWidth || image.Height > MaximumImageHeight)
             {
