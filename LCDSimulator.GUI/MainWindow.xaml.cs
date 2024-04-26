@@ -15,6 +15,8 @@ namespace LCDSimulator.GUI
         public Brush ScreenForeground { get; private set; }
         public Brush ScreenBackground { get; private set; }
 
+        public DisplayController Controller { get; }
+
         private bool runUncheckHandler = true;
 
         public MainWindow()
@@ -25,6 +27,8 @@ namespace LCDSimulator.GUI
 
             ScreenForeground = firstColorItem.Foreground;
             ScreenBackground = firstColorItem.Background;
+
+            Controller = new DisplayController();
         }
 
         public void UpdateScreenSize(int width, int height)
