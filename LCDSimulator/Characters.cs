@@ -10,6 +10,11 @@ namespace LCDSimulator
 
         public const string ImageExtension = "png";
 
+        public const string Blink5x8 = "Blink5x8";
+        public const string Blink5x11 = "Blink5x11";
+        public const string Cursor5x8 = "Cursor5x8";
+        public const string Cursor5x11 = "Cursor5x11";
+
         public static readonly string CharacterRootFolder = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "CharacterImages");
 
         public static readonly string[] CharacterImagePaths = new string[256]
@@ -528,6 +533,11 @@ namespace LCDSimulator
             Path.Join("High5x10", "Block")
         };
 
+        public static string GetImagePath(string imageName)
+        {
+            return Path.ChangeExtension(Path.Join(CharacterRootFolder, imageName), ImageExtension);
+        }
+
         public static void LoadPixelData(byte[] pixelDataTarget)
         {
             if (pixelDataTarget.Length < CharacterImagePaths.Length * 16)
@@ -537,12 +547,12 @@ namespace LCDSimulator
 
             for (int i = 0; i < CharacterImagePaths.Length; i++)
             {
-                byte[] data = GetImageData(Path.ChangeExtension(Path.Join(CharacterRootFolder, CharacterImagePaths[i]), ImageExtension));
+                byte[] data = GetImageData(GetImagePath(CharacterImagePaths[i]));
                 data.CopyTo(pixelDataTarget, i * data.Length);
             }
         }
 
-        private static byte[] GetImageData(string path)
+        public static byte[] GetImageData(string path)
         {
             using Image<Rgb24> image = Image.Load<Rgb24>(path);
 

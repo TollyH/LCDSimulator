@@ -34,6 +34,8 @@
         public const byte CGRAMAddressMask = 0b111111;
         public const byte DDRAMAddressMask = 0b1111111;
 
+        public const byte CGRAMCharacterCodeEnd = 0b10000;
+
         public const byte CharactersPerLine = 40;
         public const byte MaximumCharacterCount = CharactersPerLine * 2;
 
@@ -44,10 +46,19 @@
 
         public const byte BlankCharacter = 0x20; // ' '
 
+        public const byte DotsPerCharacterWidth = 5;
+        public const byte DotsPerCharacterHeight = 8;
+        public const byte DotsInExtendedCharacterHeight = 3;
+
         // MPU Pins
         public bool RegisterSelect { get; set; } = false;
         public bool ReadWrite { get; set; } = false;
         public byte DataBus { get; set; } = 0;
+
+        // Rendered dots
+        // In 1-line mode, a maximum of 40 characters are driven, even though DDRAM is 80 characters long
+        public readonly bool[,] FirstLineDots = new bool[CharactersPerLine * DotsPerCharacterWidth, DotsPerCharacterHeight];
+        public readonly bool[,] SecondLineDots = new bool[CharactersPerLine * DotsPerCharacterWidth, DotsPerCharacterHeight];
 
         // Internal State (Inaccessible on a real controller without going through MPU)
         private byte _addressCounter = 0;
@@ -87,6 +98,7 @@
 
         // Simulator Specific Properties
         public bool TwoLineMode => CurrentDisplayFunction == DisplayFunction.TwoLine5x8;
+        public bool ExtendedCharacterHeight => CurrentDisplayFunction == DisplayFunction.OneLine5x10;
         public byte CurrentDDRAMAddressLimit => TwoLineMode ? MaximumDDRAMAddress : (byte)(MaximumCharacterCount - 1);
 
         public byte DataReadBuffer { get; private set; } = 0;
@@ -117,6 +129,11 @@
 
         public bool AwaitingSecondInstruction { get; private set; } = false;
         public bool PendingLowerAddressRead { get; private set; } = false;
+
+        public readonly byte[] BlinkPixels5x8 = Characters.GetImageData(Characters.GetImagePath(Characters.Blink5x8));
+        public readonly byte[] BlinkPixels5x11 = Characters.GetImageData(Characters.GetImagePath(Characters.Blink5x11));
+        public readonly byte[] CursorPixels5x8 = Characters.GetImageData(Characters.GetImagePath(Characters.Cursor5x8));
+        public readonly byte[] CursorPixels5x11 = Characters.GetImageData(Characters.GetImagePath(Characters.Cursor5x11));
 
         private readonly CursorBlink blinkController = new();
 
@@ -155,6 +172,8 @@
             ShiftScreenOnWrite = false;
 
             DataReadBuffer = BlankCharacter;
+
+            UpdateRenderedDots();
         }
 
         public void CycleEnablePin()
@@ -256,6 +275,33 @@
             {
                 BusyFlag = false;
             }
+
+            UpdateRenderedDots();
+        }
+
+        public void UpdateRenderedDots()
+        {
+            if (TwoLineMode)
+            {
+                for (int i = 0; i < CharactersPerLine; i++)
+                {
+                    int ddramAddress = Mod(DisplayShiftAmount + i, CharactersPerLine);
+                    RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, true], false);
+                }
+                for (int i = 0; i < CharactersPerLine; i++)
+                {
+                    int ddramAddress = SecondLineStartAddress + Mod(DisplayShiftAmount + i, CharactersPerLine);
+                    RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, true], true);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < CharactersPerLine; i++)
+                {
+                    int ddramAddress = Mod(DisplayShiftAmount + i, CharactersPerLine);
+                    RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, false], false);
+                }
+            }
         }
 
         private void ProcessDataRead()
@@ -337,6 +383,105 @@
                 else
                 {
                     DisplayShiftAmount++;
+                }
+            }
+        }
+
+        private void RenderCharacter(int ddramAddress, int indexOnLine, byte characterCode, bool secondLine)
+        {
+            if (!EnabledDisplayComponents.HasFlag(DisplayComponents.Display))
+            {
+                // Display is disabled, render blank character and nothing else
+                RenderFont(indexOnLine, BlankCharacter, secondLine);
+                return;
+            }
+
+            RenderFont(indexOnLine, characterCode, secondLine);
+
+            if (AddressCounter == ddramAddress)
+            {
+                // Render cursor onto this character
+                if (EnabledDisplayComponents.HasFlag(DisplayComponents.Cursor))
+                {
+                    RenderPixels(ExtendedCharacterHeight ? CursorPixels5x11 : CursorPixels5x8,
+                        indexOnLine, secondLine, true);
+                }
+
+                if (blinkController.Blink && EnabledDisplayComponents.HasFlag(DisplayComponents.Blink))
+                {
+                    RenderPixels(ExtendedCharacterHeight ? BlinkPixels5x11 : BlinkPixels5x8,
+                        indexOnLine, secondLine, true);
+                }
+            }
+        }
+
+        private void RenderFont(int indexOnLine, byte characterCode, bool secondLine)
+        {
+            if (secondLine && !TwoLineMode)
+            {
+                throw new ArgumentException("secondLine cannot be true when not in two line mode.");
+            }
+
+            Span<byte> pixelDataSource;
+            if (characterCode < CGRAMCharacterCodeEnd)
+            {
+                // This is a custom character - get character data from CGRAM instead of CGROM
+                pixelDataSource = ExtendedCharacterHeight
+                    ? CharacterGeneratorRAM.AsSpan((characterCode & 0b110) << 3, 10)
+                    : CharacterGeneratorRAM.AsSpan((characterCode & 0b111) << 3, 8);
+            }
+            else
+            {
+                pixelDataSource = CharacterGeneratorROM.AsSpan(characterCode << 4, Characters.MaximumImageHeight);
+            }
+
+            RenderPixels(pixelDataSource, indexOnLine, secondLine, false);
+        }
+
+        private void RenderPixels(Span<byte> pixelDataSource, int indexOnLine, bool secondLine, bool combineWithExisting)
+        {
+            if (secondLine && !TwoLineMode)
+            {
+                throw new ArgumentException("secondLine cannot be true when not in two line mode.");
+            }
+            if (pixelDataSource.Length < DotsPerCharacterHeight ||
+                (ExtendedCharacterHeight && pixelDataSource.Length < DotsPerCharacterHeight + DotsInExtendedCharacterHeight))
+            {
+                throw new ArgumentException("pixelDataSource does not contain enough rows for current display mode.");
+            }
+
+            int startX = indexOnLine * DotsPerCharacterWidth;
+            bool[,] targetArray = secondLine ? SecondLineDots : FirstLineDots;
+            for (int y = 0; y < DotsPerCharacterHeight; y++)
+            {
+                byte row = pixelDataSource[y];
+                for (int x = 0; x < DotsPerCharacterWidth; x++, row >>= 1)
+                {
+                    targetArray[startX + x, y] = (row & 0b1) != 0;
+                }
+            }
+
+            if (ExtendedCharacterHeight)
+            {
+                // Use the second line to display the remaining bottom dots in 5x10 mode
+                // (5x10 as named in the spec is actually 5x11)
+                for (int y = 0; y < DotsInExtendedCharacterHeight; y++)
+                {
+                    byte row = pixelDataSource[DotsPerCharacterHeight + y];
+                    for (int x = 0; x < DotsPerCharacterWidth; x++, row >>= 1)
+                    {
+                        SecondLineDots[startX + x, y] = (row & 0b1) != 0
+                            // Combining with existing always keeps lit dots, but overwrites unlit dots
+                            || (combineWithExisting && SecondLineDots[startX + x, y]);
+                    }
+                }
+                // The remaining dots beneath the extended length in 5x10 mode should be blank
+                for (int y = DotsInExtendedCharacterHeight; y < DotsPerCharacterHeight; y++)
+                {
+                    for (int x = 0; x < DotsPerCharacterWidth; x++)
+                    {
+                        SecondLineDots[startX + x, y] = false;
+                    }
                 }
             }
         }
@@ -438,6 +583,12 @@
         {
             return Enum.GetValues<DisplayInstruction>().OrderDescending()
                 .FirstOrDefault(i => (instruction & (byte)i) != 0);
+        }
+
+        internal static int Mod(int a, int b)
+        {
+            // Needed because C#'s % operator finds the remainder, not modulo
+            return ((a % b) + b) % b;
         }
     }
 }
