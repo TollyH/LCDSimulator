@@ -122,6 +122,8 @@
 
         public DisplayController()
         {
+            Characters.LoadPixelData(CharacterGeneratorROM);
+
             Reset();
         }
 
