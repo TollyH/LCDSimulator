@@ -45,7 +45,6 @@ namespace LCDSimulator.GUI
             Controller = new DisplayController();
 
             displayUpdateTimer.Elapsed += displayUpdateTimer_Elapsed;
-            displayUpdateTimer.Start();
         }
 
         ~MainWindow()
@@ -292,6 +291,16 @@ namespace LCDSimulator.GUI
                 Controller.DataBus ^= (byte)(0b1 << int.Parse((string)element.Tag));
                 RefreshAllSimulatorComponents();
             }
+        }
+
+        private void ContinuousRefreshItem_Checked(object sender, RoutedEventArgs e)
+        {
+            displayUpdateTimer.Start();
+        }
+
+        private void ContinuousRefreshItem_Unchecked(object sender, RoutedEventArgs e)
+        {
+            displayUpdateTimer.Stop();
         }
     }
 }

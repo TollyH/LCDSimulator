@@ -42,6 +42,9 @@
                     <MenuItem Header="Red on Black" IsCheckable="True" Background="#FF1D090A" Foreground="#FFC52128" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="Options">
+                <MenuItem Header="Continuous display refresh (required for blink)" IsCheckable="True" IsChecked="True" Checked="ContinuousRefreshItem_Checked" Unchecked="ContinuousRefreshItem_Unchecked"/>
+            </MenuItem>
         </Menu>
         <Border x:Name="screenBorder" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9">
             <StackPanel x:Name="screenPanel"/>
