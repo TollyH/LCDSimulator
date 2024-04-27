@@ -23,6 +23,8 @@ namespace LCDSimulator.GUI
 
         private readonly System.Timers.Timer displayUpdateTimer = new(TimeSpan.FromMilliseconds(RefreshRateMilliseconds));
 
+        private static readonly Brush pinIndicatorFill = Brushes.Green;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -102,7 +104,7 @@ namespace LCDSimulator.GUI
             ScreenBackground = background;
         }
 
-        public void UpdateDisplayCharacters()
+        public void RefreshDisplayCharacters()
         {
             Controller.UpdateRenderedDots();
 
@@ -124,6 +126,28 @@ namespace LCDSimulator.GUI
                     lcdChar.UpdateCharacter();
                 }
             }
+        }
+
+        public void RefreshPinIndicators()
+        {
+            rsPinIndicator.Fill = Controller.RegisterSelect ? pinIndicatorFill : null;
+            rwPinIndicator.Fill = Controller.ReadWrite ? pinIndicatorFill : null;
+            ePinIndicator.Fill = Controller.Enable ? pinIndicatorFill : null;
+
+            d0PinIndicator.Fill = (Controller.DataBus & 0b1) != 0 ? pinIndicatorFill : null;
+            d1PinIndicator.Fill = (Controller.DataBus & 0b10) != 0 ? pinIndicatorFill : null;
+            d2PinIndicator.Fill = (Controller.DataBus & 0b100) != 0 ? pinIndicatorFill : null;
+            d3PinIndicator.Fill = (Controller.DataBus & 0b1000) != 0 ? pinIndicatorFill : null;
+            d4PinIndicator.Fill = (Controller.DataBus & 0b10000) != 0 ? pinIndicatorFill : null;
+            d5PinIndicator.Fill = (Controller.DataBus & 0b100000) != 0 ? pinIndicatorFill : null;
+            d6PinIndicator.Fill = (Controller.DataBus & 0b1000000) != 0 ? pinIndicatorFill : null;
+            d7PinIndicator.Fill = (Controller.DataBus & 0b10000000) != 0 ? pinIndicatorFill : null;
+        }
+
+        public void RefreshAllSimulatorComponents()
+        {
+            RefreshDisplayCharacters();
+            RefreshPinIndicators();
         }
 
         private void SizeMenuItem_Checked(object sender, RoutedEventArgs e)
@@ -172,7 +196,7 @@ namespace LCDSimulator.GUI
 
         private void displayUpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(UpdateDisplayCharacters);
+            Dispatcher.Invoke(RefreshAllSimulatorComponents);
         }
     }
 }

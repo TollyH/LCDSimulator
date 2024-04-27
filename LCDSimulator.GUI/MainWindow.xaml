@@ -10,38 +10,76 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" VerticalAlignment="Top">
-            <MenuItem x:Name="sizeMenu" Header="Screen Size">
-                <MenuItem Header="8x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="8x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="8x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="16x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="16x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="16x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="20x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="20x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="20x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="24x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="24x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="32x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="32x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="40x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="40x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-            </MenuItem>
-            <MenuItem x:Name="colorMenu" Header="Screen Color">
-                <MenuItem Header="Black on Green" IsCheckable="True" Background="#FFEAF205" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="Black on Gray" IsCheckable="True" Background="#FF9391A3" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="Black on Red" IsCheckable="True" Background="#FFC9000F" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="Black on Light Red" IsCheckable="True" Background="#FFFE6665" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="White on Blue" IsCheckable="True" Background="#FF208AFB" Foreground="#FFE9F7FF" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
-                <MenuItem Header="Red on Black" IsCheckable="True" Background="#FF1D090A" Foreground="#FFC52128" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+            <MenuItem Header="Screen">
+                <MenuItem x:Name="sizeMenu" Header="Size">
+                    <MenuItem Header="8x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="8x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="8x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="16x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="16x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="16x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="20x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="20x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="20x4" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="24x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="24x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="32x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="32x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="40x1" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="40x2" IsCheckable="True" Checked="SizeMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                </MenuItem>
+                <MenuItem x:Name="colorMenu" Header="Color">
+                    <MenuItem Header="Black on Green" IsCheckable="True" Background="#FFEAF205" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="Black on Gray" IsCheckable="True" Background="#FF9391A3" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="Black on Red" IsCheckable="True" Background="#FFC9000F" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="Black on Light Red" IsCheckable="True" Background="#FFFE6665" Foreground="Black" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="White on Blue" IsCheckable="True" Background="#FF208AFB" Foreground="#FFE9F7FF" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                    <MenuItem Header="Red on Black" IsCheckable="True" Background="#FF1D090A" Foreground="#FFC52128" Checked="ColorMenuItem_Checked" Unchecked="MenuItem_Unchecked"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Border x:Name="screenBorder" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9">
             <StackPanel x:Name="screenPanel"/>
         </Border>
         <Rectangle Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" x:Name="disabledBacklightOverlay" Fill="#CC000000" Width="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=screenBorder, Mode=OneWay}"/>
+        <StackPanel Grid.Row="2" Margin="10,0,10,5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}">
+            <Ellipse x:Name="vddPinIndicator" Margin="5,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="voPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="rsPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="rwPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="ePinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d0PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d1PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d2PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d3PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d4PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d5PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d6PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="d7PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="aPinIndicator" Margin="3,0,5,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Margin="10,0,10,10" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}">
+            <Label Margin="5,0,0,0" Width="11" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Right" Content="V"/>
+            <Label Margin="0,0,3,0" Width="11" Height="10" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Content="DD" FontSize="8"/>
+            <Label Margin="3,0,0,0" Width="11" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Right" Content="V"/>
+            <Label Margin="0,0,3,0" Width="11" Height="10" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Content="O" FontSize="8"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="RS"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="RW"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="E"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D0"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D1"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D2"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D3"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D4"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D5"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D6"/>
+            <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D7"/>
+            <Label Margin="3,0,5,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="A"/>
+        </StackPanel>
     </Grid>
 </Window>
