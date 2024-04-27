@@ -168,6 +168,21 @@ namespace LCDSimulator.GUI
             d6PinIndicator.Fill = (Controller.DataBus & 0b1000000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
             d7PinIndicator.Fill = (Controller.DataBus & 0b10000000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
 
+            if (Controller.FourBitMode)
+            {
+                d0PinIndicator.Opacity = 0.25;
+                d1PinIndicator.Opacity = 0.25;
+                d2PinIndicator.Opacity = 0.25;
+                d3PinIndicator.Opacity = 0.25;
+            }
+            else
+            {
+                d0PinIndicator.Opacity = 1;
+                d1PinIndicator.Opacity = 1;
+                d2PinIndicator.Opacity = 1;
+                d3PinIndicator.Opacity = 1;
+            }
+
             aPinIndicator.Fill = disabledBacklightOverlay.Visibility == Visibility.Visible ? pinIndicatorFillLow : pinIndicatorFillHigh;
         }
 
