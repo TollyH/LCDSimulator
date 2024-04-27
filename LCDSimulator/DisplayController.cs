@@ -273,7 +273,10 @@
                         }
                     }
 
-                    IncrementAddressCounter();
+                    if (!AwaitingSecondInstruction)
+                    {
+                        IncrementAddressCounter();
+                    }
                 }
                 else
                 {
