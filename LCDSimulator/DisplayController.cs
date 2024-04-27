@@ -92,6 +92,9 @@
         public readonly bool[,] FirstLineDots = new bool[CharactersPerLine * DotsPerCharacterWidth, DotsPerCharacterHeight];
         public readonly bool[,] SecondLineDots = new bool[CharactersPerLine * DotsPerCharacterWidth, DotsPerCharacterHeight];
 
+        public readonly byte[] FirstLineDDRAMAddresses = new byte[CharactersPerLine];
+        public readonly byte[] SecondLineDDRAMAddresses = new byte[CharactersPerLine];
+
         // Internal State (Inaccessible on a real controller without going through MPU)
         private byte _addressCounter = 0;
         public byte AddressCounter
@@ -326,11 +329,13 @@
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
                     int ddramAddress = Mod(i - DisplayShiftAmount, CharactersPerLine);
+                    FirstLineDDRAMAddresses[i] = (byte)ddramAddress;
                     RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, true], false);
                 }
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
                     int ddramAddress = SecondLineStartAddress + Mod(i - DisplayShiftAmount, CharactersPerLine);
+                    SecondLineDDRAMAddresses[i] = (byte)ddramAddress;
                     RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, true], true);
                 }
             }
@@ -348,6 +353,7 @@
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
                     int ddramAddress = Mod(i - DisplayShiftAmount, CharactersPerLine);
+                    FirstLineDDRAMAddresses[i] = (byte)ddramAddress;
                     RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, false], false);
                 }
             }

@@ -17,7 +17,6 @@ namespace LCDSimulator.GUI.Controls
 
         public PixelState[,] Dots { get; }
 
-        public byte DDRAMAddress { get; set; }
         public bool SecondLine { get; set; }
         public int IndexOnLine { get; set; }
 
@@ -28,13 +27,12 @@ namespace LCDSimulator.GUI.Controls
             set => _contrast = Math.Clamp(value, 0, 1);
         }
 
-        public LCDChar(byte ddramAddress, bool secondLine, int indexOnLine)
+        public LCDChar(bool secondLine, int indexOnLine)
         {
             InitializeComponent();
 
             Dots = new PixelState[5, 8];
 
-            DDRAMAddress = ddramAddress;
             SecondLine = secondLine;
             IndexOnLine = indexOnLine;
 

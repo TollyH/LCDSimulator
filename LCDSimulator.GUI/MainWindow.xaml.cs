@@ -81,13 +81,8 @@ namespace LCDSimulator.GUI
                 {
                     bool secondLine = y % 2 != 0;
                     byte indexOnLine = (byte)(y / 2 * width + x);
-                    byte ddramAddress = indexOnLine;
-                    if (secondLine)
-                    {
-                        ddramAddress += DisplayController.SecondLineStartAddress;
-                    }
 
-                    _ = line.Children.Add(new Controls.LCDChar(ddramAddress, secondLine, indexOnLine));
+                    _ = line.Children.Add(new Controls.LCDChar(secondLine, indexOnLine));
                 }
                 _ = screenPanel.Children.Add(line);
             }
@@ -134,7 +129,25 @@ namespace LCDSimulator.GUI
                 {
                     lcdChar.Contrast = scaledContrast;
 
-                    bool[,] sourceArray = lcdChar.SecondLine ? Controller.SecondLineDots : Controller.FirstLineDots;
+                    bool[,] sourceArray = lcdChar.SecondLine
+                        ? Controller.SecondLineDots
+                        : Controller.FirstLineDots;
+                    byte[] addressArray = lcdChar.SecondLine
+                        ? Controller.SecondLineDDRAMAddresses
+                        : Controller.FirstLineDDRAMAddresses;
+
+                    if (Controller.TwoLineMode || !lcdChar.SecondLine)
+                    {
+                        byte ddramAddress = addressArray[lcdChar.IndexOnLine];
+                        byte characterCode = Controller.DisplayDataRAM[ddramAddress, Controller.TwoLineMode];
+
+                        lcdChar.ToolTip = $"DDRAM address: {ddramAddress}\nCharacter code: {characterCode} ({characterCode:b8})";
+                    }
+                    else
+                    {
+                        lcdChar.ToolTip = null;
+                    }
+
                     int startX = lcdChar.IndexOnLine * DisplayController.DotsPerCharacterWidth;
 
                     for (int y = 0; y < DisplayController.DotsPerCharacterHeight; y++)
