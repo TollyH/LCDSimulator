@@ -325,12 +325,12 @@
             {
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
-                    int ddramAddress = Mod(DisplayShiftAmount + i, CharactersPerLine);
+                    int ddramAddress = Mod(i - DisplayShiftAmount, CharactersPerLine);
                     RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, true], false);
                 }
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
-                    int ddramAddress = SecondLineStartAddress + Mod(DisplayShiftAmount + i, CharactersPerLine);
+                    int ddramAddress = SecondLineStartAddress + Mod(i - DisplayShiftAmount, CharactersPerLine);
                     RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, true], true);
                 }
             }
@@ -347,7 +347,7 @@
 
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
-                    int ddramAddress = Mod(DisplayShiftAmount + i, CharactersPerLine);
+                    int ddramAddress = Mod(i - DisplayShiftAmount, CharactersPerLine);
                     RenderCharacter(ddramAddress, i, DisplayDataRAM[ddramAddress, false], false);
                 }
             }
@@ -447,7 +447,7 @@
 
             RenderFont(indexOnLine, characterCode, secondLine);
 
-            if (AddressCounter == ddramAddress)
+            if ((AddressCounter & DDRAMAddressMask) == (ddramAddress & DDRAMAddressMask))
             {
                 // Render cursor onto this character
                 if (EnabledDisplayComponents.HasFlag(DisplayComponents.Cursor))
@@ -507,7 +507,9 @@
                 // x is iterated in reverse so that lower bits start on the right
                 for (int x = DotsPerCharacterWidth - 1; x >= 0; x--, row >>= 1)
                 {
-                    targetArray[startX + x, y] = (row & 0b1) != 0;
+                    targetArray[startX + x, y] = (row & 0b1) != 0
+                        // Combining with existing always keeps lit dots, but overwrites unlit dots
+                        || (combineWithExisting && targetArray[startX + x, y]);
                 }
             }
 
