@@ -19,11 +19,19 @@ namespace LCDSimulator.GUI
 
         public DisplayController Controller { get; }
 
+        private double _contrast = -1;
+        public double Contrast
+        {
+            get => _contrast;
+            set => _contrast = Math.Clamp(value, -1, 1);
+        }
+
         private bool runUncheckHandler = true;
 
         private readonly System.Timers.Timer displayUpdateTimer = new(TimeSpan.FromMilliseconds(RefreshRateMilliseconds));
 
-        private static readonly Brush pinIndicatorFill = Brushes.Green;
+        private static readonly SolidColorBrush pinIndicatorFillHigh = Brushes.Green;
+        private static readonly SolidColorBrush pinIndicatorFillLow = Brushes.Transparent;
 
         public MainWindow()
         {
@@ -112,6 +120,8 @@ namespace LCDSimulator.GUI
             {
                 foreach (Controls.LCDChar lcdChar in line.Children.OfType<Controls.LCDChar>())
                 {
+                    lcdChar.Contrast = Contrast;
+
                     bool[,] sourceArray = lcdChar.SecondLine ? Controller.SecondLineDots : Controller.FirstLineDots;
                     int startX = lcdChar.IndexOnLine * DisplayController.DotsPerCharacterWidth;
 
@@ -130,18 +140,35 @@ namespace LCDSimulator.GUI
 
         public void RefreshPinIndicators()
         {
-            rsPinIndicator.Fill = Controller.RegisterSelect ? pinIndicatorFill : null;
-            rwPinIndicator.Fill = Controller.ReadWrite ? pinIndicatorFill : null;
-            ePinIndicator.Fill = Controller.Enable ? pinIndicatorFill : null;
+            vddPinIndicator.Fill = Controller.IsPowered ? pinIndicatorFillHigh : pinIndicatorFillLow;
 
-            d0PinIndicator.Fill = (Controller.DataBus & 0b1) != 0 ? pinIndicatorFill : null;
-            d1PinIndicator.Fill = (Controller.DataBus & 0b10) != 0 ? pinIndicatorFill : null;
-            d2PinIndicator.Fill = (Controller.DataBus & 0b100) != 0 ? pinIndicatorFill : null;
-            d3PinIndicator.Fill = (Controller.DataBus & 0b1000) != 0 ? pinIndicatorFill : null;
-            d4PinIndicator.Fill = (Controller.DataBus & 0b10000) != 0 ? pinIndicatorFill : null;
-            d5PinIndicator.Fill = (Controller.DataBus & 0b100000) != 0 ? pinIndicatorFill : null;
-            d6PinIndicator.Fill = (Controller.DataBus & 0b1000000) != 0 ? pinIndicatorFill : null;
-            d7PinIndicator.Fill = (Controller.DataBus & 0b10000000) != 0 ? pinIndicatorFill : null;
+            Color startColor = pinIndicatorFillLow.Color;
+            Color endColor = pinIndicatorFillHigh.Color;
+            // Convert contrast in range [-1, 1] to value in range [0, 1]
+            double contrastProportion = (Contrast + 1) / 2;
+            // Blend between high and low color based on contrast amount
+            voPinIndicator.Fill = new SolidColorBrush(new Color()
+            {
+                R = (byte)(startColor.R + ((endColor.R - startColor.R) * contrastProportion)),
+                G = (byte)(startColor.G + ((endColor.G - startColor.G) * contrastProportion)),
+                B = (byte)(startColor.B + ((endColor.B - startColor.B) * contrastProportion)),
+                A = (byte)(startColor.A + ((endColor.A - startColor.A) * contrastProportion))
+            });
+
+            rsPinIndicator.Fill = Controller.RegisterSelect ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            rwPinIndicator.Fill = Controller.ReadWrite ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            ePinIndicator.Fill = Controller.Enable ? pinIndicatorFillHigh : pinIndicatorFillLow;
+
+            d0PinIndicator.Fill = (Controller.DataBus & 0b1) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d1PinIndicator.Fill = (Controller.DataBus & 0b10) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d2PinIndicator.Fill = (Controller.DataBus & 0b100) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d3PinIndicator.Fill = (Controller.DataBus & 0b1000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d4PinIndicator.Fill = (Controller.DataBus & 0b10000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d5PinIndicator.Fill = (Controller.DataBus & 0b100000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d6PinIndicator.Fill = (Controller.DataBus & 0b1000000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+            d7PinIndicator.Fill = (Controller.DataBus & 0b10000000) != 0 ? pinIndicatorFillHigh : pinIndicatorFillLow;
+
+            aPinIndicator.Fill = disabledBacklightOverlay.Visibility == Visibility.Visible ? pinIndicatorFillLow : pinIndicatorFillHigh;
         }
 
         public void RefreshAllSimulatorComponents()
@@ -197,6 +224,59 @@ namespace LCDSimulator.GUI
         private void displayUpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             Dispatcher.Invoke(RefreshAllSimulatorComponents);
+        }
+
+        private void vddPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Controller.IsPowered = !Controller.IsPowered;
+            RefreshAllSimulatorComponents();
+        }
+
+        private void voPinIndicator_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            Contrast += e.Delta / 1000.0;
+            RefreshAllSimulatorComponents();
+        }
+
+        private void voPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _ = MessageBox.Show(this, "Use the scroll wheel on the VO pin to adjust contrast",
+                "Contrast adjustment", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void rsPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Controller.RegisterSelect = !Controller.RegisterSelect;
+            RefreshAllSimulatorComponents();
+        }
+
+        private void rwPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Controller.ReadWrite = !Controller.ReadWrite;
+            RefreshAllSimulatorComponents();
+        }
+
+        private void ePinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Controller.Enable = !Controller.Enable;
+            RefreshAllSimulatorComponents();
+        }
+
+        private void aPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            disabledBacklightOverlay.Visibility = disabledBacklightOverlay.Visibility == Visibility.Visible
+                ? Visibility.Hidden
+                : Visibility.Visible;
+            RefreshAllSimulatorComponents();
+        }
+
+        private void DataPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement element)
+            {
+                Controller.DataBus ^= (byte)(0b1 << int.Parse((string)element.Tag));
+                RefreshAllSimulatorComponents();
+            }
         }
     }
 }

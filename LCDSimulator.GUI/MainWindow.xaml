@@ -46,22 +46,22 @@
         <Border x:Name="screenBorder" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9">
             <StackPanel x:Name="screenPanel"/>
         </Border>
-        <Rectangle Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" x:Name="disabledBacklightOverlay" Fill="#CC000000" Width="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=screenBorder, Mode=OneWay}"/>
+        <Rectangle x:Name="disabledBacklightOverlay" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Fill="#CC000000" Width="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=screenBorder, Mode=OneWay}" IsHitTestVisible="False"/>
         <StackPanel Grid.Row="2" Margin="10,0,10,5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}">
-            <Ellipse x:Name="vddPinIndicator" Margin="5,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="voPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="rsPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="rwPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="ePinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d0PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d1PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d2PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d3PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d4PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d5PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d6PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="d7PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
-            <Ellipse x:Name="aPinIndicator" Margin="3,0,5,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top"/>
+            <Ellipse x:Name="vddPinIndicator" Margin="5,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="vddPinIndicator_MouseUp"/>
+            <Ellipse x:Name="voPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseWheel="voPinIndicator_MouseWheel" MouseUp="voPinIndicator_MouseUp"/>
+            <Ellipse x:Name="rsPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="rsPinIndicator_MouseUp"/>
+            <Ellipse x:Name="rwPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="rwPinIndicator_MouseUp"/>
+            <Ellipse x:Name="ePinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="ePinIndicator_MouseUp"/>
+            <Ellipse x:Name="d0PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="0"/>
+            <Ellipse x:Name="d1PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="1"/>
+            <Ellipse x:Name="d2PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="2"/>
+            <Ellipse x:Name="d3PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="3"/>
+            <Ellipse x:Name="d4PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="4"/>
+            <Ellipse x:Name="d5PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="5"/>
+            <Ellipse x:Name="d6PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="6"/>
+            <Ellipse x:Name="d7PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="7"/>
+            <Ellipse x:Name="aPinIndicator" Margin="3,0,5,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="aPinIndicator_MouseUp"/>
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="10,0,10,10" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}">
             <Label Margin="5,0,0,0" Width="11" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Right" Content="V"/>

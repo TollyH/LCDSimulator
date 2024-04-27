@@ -55,6 +55,23 @@
         public bool ReadWrite { get; set; } = false;
         public byte DataBus { get; set; } = 0;
 
+        private bool _isPowered = false;
+        public bool IsPowered
+        {
+            get => _isPowered;
+            set
+            {
+                if (!value)
+                {
+                    Reset();
+                }
+
+                _isPowered = value;
+
+                UpdateRenderedDots();
+            }
+        }
+
         private bool _enable = false;
         public bool Enable
         {
@@ -193,6 +210,11 @@
 
         public void StartOperation()
         {
+            if (!IsPowered)
+            {
+                return;
+            }
+
             if (!RegisterSelect && ReadWrite)
             {
                 // Read busy flag and current address
@@ -311,6 +333,15 @@
             }
             else
             {
+                // Blank out second line before rendering in 1-line mode
+                for (int x = 0; x < SecondLineDots.GetLength(0); x++)
+                {
+                    for (int y = 0; y < SecondLineDots.GetLength(1); y++)
+                    {
+                        SecondLineDots[x, y] = false;
+                    }
+                }
+
                 for (int i = 0; i < CharactersPerLine; i++)
                 {
                     int ddramAddress = Mod(DisplayShiftAmount + i, CharactersPerLine);
@@ -582,6 +613,10 @@
                 : (InstructionRegister & 0b1000) != 0
                     ? DisplayFunction.TwoLine5x8
                     : DisplayFunction.OneLine5x8;
+
+            // This will ensure that address counter is still a valid value
+            // when switching between 1 and 2 line mode.
+            AddressCounter = _addressCounter;
         }
 
         private void SetCGRAMAddress()

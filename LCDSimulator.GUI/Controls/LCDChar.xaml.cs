@@ -14,7 +14,7 @@ namespace LCDSimulator.GUI.Controls
         public bool SecondLine { get; set; }
         public int IndexOnLine { get; set; }
 
-        private double _contrast = 0.0f;
+        private double _contrast = 0;
         public double Contrast
         {
             get => _contrast;
