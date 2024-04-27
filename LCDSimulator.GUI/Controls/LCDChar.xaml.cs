@@ -10,6 +10,10 @@ namespace LCDSimulator.GUI.Controls
     {
         public bool[,] Dots { get; }
 
+        public byte DDRAMAddress { get; set; }
+        public bool SecondLine { get; set; }
+        public int IndexOnLine { get; set; }
+
         private double _contrast = 0.0f;
         public double Contrast
         {
@@ -17,11 +21,15 @@ namespace LCDSimulator.GUI.Controls
             set => _contrast = Math.Clamp(value, -1, 1);
         }
 
-        public LCDChar()
+        public LCDChar(byte ddramAddress, bool secondLine, int indexOnLine)
         {
             InitializeComponent();
 
             Dots = new bool[5, 8];
+
+            DDRAMAddress = ddramAddress;
+            SecondLine = secondLine;
+            IndexOnLine = indexOnLine;
 
             UpdateCharacter();
         }

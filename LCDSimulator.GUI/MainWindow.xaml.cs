@@ -7,8 +7,10 @@ namespace LCDSimulator.GUI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
+        public const double RefreshRateMilliseconds = 100;  // 10 FPS
+
         public int ScreenWidth { get; private set; }
         public int ScreenHeight { get; private set; }
 
@@ -18,6 +20,8 @@ namespace LCDSimulator.GUI
         public DisplayController Controller { get; }
 
         private bool runUncheckHandler = true;
+
+        private readonly System.Timers.Timer displayUpdateTimer = new(TimeSpan.FromMilliseconds(RefreshRateMilliseconds));
 
         public MainWindow()
         {
@@ -29,6 +33,21 @@ namespace LCDSimulator.GUI
             ScreenBackground = firstColorItem.Background;
 
             Controller = new DisplayController();
+
+            displayUpdateTimer.Elapsed += displayUpdateTimer_Elapsed;
+            displayUpdateTimer.Start();
+        }
+
+        ~MainWindow()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            displayUpdateTimer.Dispose();
+
+            GC.SuppressFinalize(this);
         }
 
         public void UpdateScreenSize(int width, int height)
@@ -48,7 +67,15 @@ namespace LCDSimulator.GUI
                 };
                 for (int x = 0; x < width; x++)
                 {
-                    _ = line.Children.Add(new Controls.LCDChar());
+                    bool secondLine = y % 2 != 0;
+                    byte indexOnLine = (byte)(y / 2 * width + x);
+                    byte ddramAddress = indexOnLine;
+                    if (secondLine)
+                    {
+                        ddramAddress += DisplayController.SecondLineStartAddress;
+                    }
+
+                    _ = line.Children.Add(new Controls.LCDChar(ddramAddress, secondLine, indexOnLine));
                 }
                 _ = screenPanel.Children.Add(line);
             }
@@ -73,6 +100,30 @@ namespace LCDSimulator.GUI
 
             ScreenForeground = foreground;
             ScreenBackground = background;
+        }
+
+        public void UpdateDisplayCharacters()
+        {
+            Controller.UpdateRenderedDots();
+
+            foreach (StackPanel line in screenPanel.Children.OfType<StackPanel>())
+            {
+                foreach (Controls.LCDChar lcdChar in line.Children.OfType<Controls.LCDChar>())
+                {
+                    bool[,] sourceArray = lcdChar.SecondLine ? Controller.SecondLineDots : Controller.FirstLineDots;
+                    int startX = lcdChar.IndexOnLine * DisplayController.DotsPerCharacterWidth;
+
+                    for (int y = 0; y < DisplayController.DotsPerCharacterHeight; y++)
+                    {
+                        for (int x = 0; x < DisplayController.DotsPerCharacterWidth; x++)
+                        {
+                            lcdChar.Dots[x, y] = sourceArray[startX + x, y];
+                        }
+                    }
+
+                    lcdChar.UpdateCharacter();
+                }
+            }
         }
 
         private void SizeMenuItem_Checked(object sender, RoutedEventArgs e)
@@ -117,6 +168,11 @@ namespace LCDSimulator.GUI
         {
             colorMenu.Items.OfType<MenuItem>().First().IsChecked = true;
             sizeMenu.Items.OfType<MenuItem>().First().IsChecked = true;
+        }
+
+        private void displayUpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke(UpdateDisplayCharacters);
         }
     }
 }

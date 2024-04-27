@@ -455,7 +455,8 @@
             for (int y = 0; y < DotsPerCharacterHeight; y++)
             {
                 byte row = pixelDataSource[y];
-                for (int x = 0; x < DotsPerCharacterWidth; x++, row >>= 1)
+                // x is iterated in reverse so that lower bits start on the right
+                for (int x = DotsPerCharacterWidth - 1; x >= 0; x--, row >>= 1)
                 {
                     targetArray[startX + x, y] = (row & 0b1) != 0;
                 }
@@ -468,7 +469,8 @@
                 for (int y = 0; y < DotsInExtendedCharacterHeight; y++)
                 {
                     byte row = pixelDataSource[DotsPerCharacterHeight + y];
-                    for (int x = 0; x < DotsPerCharacterWidth; x++, row >>= 1)
+                    // x is iterated in reverse so that lower bits start on the right
+                    for (int x = DotsPerCharacterWidth - 1; x >= 0; x--, row >>= 1)
                     {
                         SecondLineDots[startX + x, y] = (row & 0b1) != 0
                             // Combining with existing always keeps lit dots, but overwrites unlit dots

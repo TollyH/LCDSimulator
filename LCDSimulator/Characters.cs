@@ -5,7 +5,7 @@ namespace LCDSimulator
 {
     public static class Characters
     {
-        public const int MaximumImageWidth = 8;
+        public const int MaximumImageWidth = 5;
         public const int MaximumImageHeight = 16;
 
         public const string ImageExtension = "png";
@@ -571,7 +571,7 @@ namespace LCDSimulator
                     if (pixel is { R: 0, G: 0, B: 0 })
                     {
                         // Images index from top-left, characters index from top-right
-                        data[y] |= (byte)(1 << (MaximumImageWidth - x));
+                        data[y] |= (byte)(1 << (MaximumImageWidth - x - 1));
                     }
                 }
             }
