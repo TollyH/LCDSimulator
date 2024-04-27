@@ -568,7 +568,7 @@ namespace LCDSimulator
                 for (int x = 0; x < image.Width; x++)
                 {
                     Rgb24 pixel = image[x, y];
-                    if (pixel.R > 0 || pixel.G > 0 || pixel.B > 0)
+                    if (pixel is { R: 0, G: 0, B: 0 })
                     {
                         // Images index from top-left, characters index from top-right
                         data[y] |= (byte)(1 << (MaximumImageWidth - x));
