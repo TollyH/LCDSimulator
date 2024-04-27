@@ -55,6 +55,21 @@
         public bool ReadWrite { get; set; } = false;
         public byte DataBus { get; set; } = 0;
 
+        private bool _enable = false;
+        public bool Enable
+        {
+            get => _enable;
+            set
+            {
+                if (_enable && !value)
+                {
+                    // Enable pin uses falling edge detection
+                    StartOperation();
+                }
+                _enable = value;
+            }
+        }
+
         // Rendered dots
         // In 1-line mode, a maximum of 40 characters are driven, even though DDRAM is 80 characters long
         public readonly bool[,] FirstLineDots = new bool[CharactersPerLine * DotsPerCharacterWidth, DotsPerCharacterHeight];
@@ -176,7 +191,7 @@
             UpdateRenderedDots();
         }
 
-        public void CycleEnablePin()
+        public void StartOperation()
         {
             if (!RegisterSelect && ReadWrite)
             {
