@@ -195,6 +195,12 @@
         {
             ClearDisplay();
 
+            // Set CGRAM to default pattern (alternating horizontal stripes)
+            for (int i = 0; i < CharacterGeneratorRAM.Length; i++)
+            {
+                CharacterGeneratorRAM[i] = (byte)(i % 2 == 0 ? byte.MaxValue : 0);
+            }
+
             FourBitMode = false;
             AwaitingSecondInstruction = false;
             PendingLowerAddressRead = false;
@@ -482,7 +488,7 @@
             {
                 // This is a custom character - get character data from CGRAM instead of CGROM
                 pixelDataSource = ExtendedCharacterHeight
-                    ? CharacterGeneratorRAM.AsSpan((characterCode & 0b110) << 3, 10)
+                    ? CharacterGeneratorRAM.AsSpan((characterCode & 0b110) << 3, 11)
                     : CharacterGeneratorRAM.AsSpan((characterCode & 0b111) << 3, 8);
             }
             else
