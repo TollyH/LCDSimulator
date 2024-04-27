@@ -219,10 +219,21 @@ namespace LCDSimulator.GUI
             aPinIndicator.Fill = disabledBacklightOverlay.Visibility == Visibility.Visible ? pinIndicatorFillLow : pinIndicatorFillHigh;
         }
 
+        public void RefreshInternalInfoDisplays()
+        {
+            addressLocationLabel.Content = Controller.AddressingCharacterGeneratorRAM ? "CGRAM" : "DDRAM";
+
+            byte address = (byte)(Controller.AddressCounter & (Controller.AddressingCharacterGeneratorRAM
+                ? DisplayController.CGRAMAddressMask
+                : DisplayController.DDRAMAddressMask));
+            addressCounterLabel.Content = $"{address} ({address:b8})";
+        }
+
         public void RefreshAllSimulatorComponents()
         {
             RefreshDisplayCharacters();
             RefreshPinIndicators();
+            RefreshInternalInfoDisplays();
         }
 
         private void SizeMenuItem_Checked(object sender, RoutedEventArgs e)
