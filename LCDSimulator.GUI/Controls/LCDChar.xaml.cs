@@ -8,7 +8,14 @@ namespace LCDSimulator.GUI.Controls
     /// </summary>
     public partial class LCDChar : UserControl
     {
-        public bool[,] Dots { get; }
+        public enum PixelState
+        {
+            Unpowered,
+            PoweredOff,
+            PoweredOn
+        }
+
+        public PixelState[,] Dots { get; }
 
         public byte DDRAMAddress { get; set; }
         public bool SecondLine { get; set; }
@@ -18,14 +25,14 @@ namespace LCDSimulator.GUI.Controls
         public double Contrast
         {
             get => _contrast;
-            set => _contrast = Math.Clamp(value, -1, 1);
+            set => _contrast = Math.Clamp(value, 0, 1);
         }
 
         public LCDChar(byte ddramAddress, bool secondLine, int indexOnLine)
         {
             InitializeComponent();
 
-            Dots = new bool[5, 8];
+            Dots = new PixelState[5, 8];
 
             DDRAMAddress = ddramAddress;
             SecondLine = secondLine;
@@ -34,9 +41,13 @@ namespace LCDSimulator.GUI.Controls
             UpdateCharacter();
         }
 
-        public double CalculateOpacity(bool active)
+        public double CalculateOpacity(PixelState state)
         {
-            return Math.Clamp((active ? 0.9 : 0.1) + Contrast, 0, 1);
+            if (state == PixelState.Unpowered)
+            {
+                return 0;
+            }
+            return Math.Clamp((state == PixelState.PoweredOn ? 0.9 : 0.1) + ((Contrast - 0.5) * 2), 0, 1);
         }
 
         public void UpdateCharacter()

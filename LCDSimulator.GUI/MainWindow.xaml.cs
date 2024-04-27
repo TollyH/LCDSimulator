@@ -11,6 +11,9 @@ namespace LCDSimulator.GUI
     {
         public const double RefreshRateMilliseconds = 100;  // 10 FPS
 
+        public const double ContrastScaleSingleLine = 2;
+        public const double ContrastScaleExtendedHeight = 16.0 / 11.0;
+
         public int ScreenWidth { get; private set; }
         public int ScreenHeight { get; private set; }
 
@@ -19,11 +22,11 @@ namespace LCDSimulator.GUI
 
         public DisplayController Controller { get; }
 
-        private double _contrast = -1;
+        private double _contrast = 0;
         public double Contrast
         {
             get => _contrast;
-            set => _contrast = Math.Clamp(value, -1, 1);
+            set => _contrast = Math.Clamp(value, 0, 1);
         }
 
         private bool runUncheckHandler = true;
@@ -115,11 +118,21 @@ namespace LCDSimulator.GUI
         {
             Controller.UpdateRenderedDots();
 
+            double scaledContrast = Contrast;
+            if (Controller.ExtendedCharacterHeight)
+            {
+                scaledContrast *= ContrastScaleExtendedHeight;
+            }
+            else if (!Controller.TwoLineMode)
+            {
+                scaledContrast *= ContrastScaleSingleLine;
+            }
+
             foreach (StackPanel line in screenPanel.Children.OfType<StackPanel>())
             {
                 foreach (Controls.LCDChar lcdChar in line.Children.OfType<Controls.LCDChar>())
                 {
-                    lcdChar.Contrast = Contrast;
+                    lcdChar.Contrast = scaledContrast;
 
                     bool[,] sourceArray = lcdChar.SecondLine ? Controller.SecondLineDots : Controller.FirstLineDots;
                     int startX = lcdChar.IndexOnLine * DisplayController.DotsPerCharacterWidth;
@@ -128,7 +141,18 @@ namespace LCDSimulator.GUI
                     {
                         for (int x = 0; x < DisplayController.DotsPerCharacterWidth; x++)
                         {
-                            lcdChar.Dots[x, y] = sourceArray[startX + x, y];
+                            // Dot should be completely invisible if it is on the second line in 1-line mode,
+                            // unless it is the bottom part of a character in extended height mode.
+                            bool invisible = !Controller.IsPowered
+                                || (!Controller.TwoLineMode && lcdChar.SecondLine
+                                    && (!Controller.ExtendedCharacterHeight
+                                        || y >= DisplayController.DotsInExtendedCharacterHeight));
+
+                            lcdChar.Dots[x, y] = invisible
+                                ? Controls.LCDChar.PixelState.Unpowered
+                                : sourceArray[startX + x, y]
+                                    ? Controls.LCDChar.PixelState.PoweredOn
+                                    : Controls.LCDChar.PixelState.PoweredOff;
                         }
                     }
 
@@ -143,15 +167,13 @@ namespace LCDSimulator.GUI
 
             Color startColor = pinIndicatorFillLow.Color;
             Color endColor = pinIndicatorFillHigh.Color;
-            // Convert contrast in range [-1, 1] to value in range [0, 1]
-            double contrastProportion = (Contrast + 1) / 2;
             // Blend between high and low color based on contrast amount
             voPinIndicator.Fill = new SolidColorBrush(new Color()
             {
-                R = (byte)(startColor.R + ((endColor.R - startColor.R) * contrastProportion)),
-                G = (byte)(startColor.G + ((endColor.G - startColor.G) * contrastProportion)),
-                B = (byte)(startColor.B + ((endColor.B - startColor.B) * contrastProportion)),
-                A = (byte)(startColor.A + ((endColor.A - startColor.A) * contrastProportion))
+                R = (byte)(startColor.R + ((endColor.R - startColor.R) * Contrast)),
+                G = (byte)(startColor.G + ((endColor.G - startColor.G) * Contrast)),
+                B = (byte)(startColor.B + ((endColor.B - startColor.B) * Contrast)),
+                A = (byte)(startColor.A + ((endColor.A - startColor.A) * Contrast))
             });
 
             rsPinIndicator.Fill = Controller.RegisterSelect ? pinIndicatorFillHigh : pinIndicatorFillLow;
@@ -248,7 +270,7 @@ namespace LCDSimulator.GUI
 
         private void voPinIndicator_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            Contrast += e.Delta / 1000.0;
+            Contrast += e.Delta / 5000.0;
             RefreshAllSimulatorComponents();
         }
 
