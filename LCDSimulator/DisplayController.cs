@@ -444,7 +444,7 @@
 
         private void RenderCharacter(int ddramAddress, int indexOnLine, byte characterCode, bool secondLine)
         {
-            if (!EnabledDisplayComponents.HasFlag(DisplayComponents.Display))
+            if ((EnabledDisplayComponents & DisplayComponents.Display) == 0)
             {
                 // Display is disabled, render blank character and nothing else
                 RenderFont(indexOnLine, BlankCharacter, secondLine);
@@ -456,13 +456,13 @@
             if ((AddressCounter & DDRAMAddressMask) == (ddramAddress & DDRAMAddressMask))
             {
                 // Render cursor onto this character
-                if (EnabledDisplayComponents.HasFlag(DisplayComponents.Cursor))
+                if ((EnabledDisplayComponents & DisplayComponents.Cursor) != 0)
                 {
                     RenderPixels(ExtendedCharacterHeight ? CursorPixels5x11 : CursorPixels5x8,
                         indexOnLine, secondLine, true);
                 }
 
-                if (blinkController.Blink && EnabledDisplayComponents.HasFlag(DisplayComponents.Blink))
+                if (blinkController.Blink && (EnabledDisplayComponents & DisplayComponents.Blink) != 0)
                 {
                     RenderPixels(ExtendedCharacterHeight ? BlinkPixels5x11 : BlinkPixels5x8,
                         indexOnLine, secondLine, true);

@@ -31,6 +31,8 @@ namespace LCDSimulator.GUI
 
         private bool runUncheckHandler = true;
 
+        private readonly List<Controls.LCDChar> lcdCharacters = new();
+
         private readonly System.Timers.Timer displayUpdateTimer = new(TimeSpan.FromMilliseconds(RefreshRateMilliseconds));
 
         private static readonly SolidColorBrush pinIndicatorFillHigh = Brushes.Green;
@@ -70,6 +72,7 @@ namespace LCDSimulator.GUI
             }
 
             screenPanel.Children.Clear();
+            lcdCharacters.Clear();
 
             for (int y = 0; y < height; y++)
             {
@@ -82,7 +85,9 @@ namespace LCDSimulator.GUI
                     bool secondLine = y % 2 != 0;
                     byte indexOnLine = (byte)(y / 2 * width + x);
 
-                    _ = line.Children.Add(new Controls.LCDChar(secondLine, indexOnLine));
+                    Controls.LCDChar lcdChar = new(secondLine, indexOnLine);
+                    _ = line.Children.Add(lcdChar);
+                    lcdCharacters.Add(lcdChar);
                 }
                 _ = screenPanel.Children.Add(line);
             }
@@ -97,12 +102,9 @@ namespace LCDSimulator.GUI
         {
             screenBorder.Background = background;
 
-            foreach (StackPanel line in screenPanel.Children.OfType<StackPanel>())
+            foreach (Controls.LCDChar lcdChar in lcdCharacters)
             {
-                foreach (Controls.LCDChar lcdChar in line.Children.OfType<Controls.LCDChar>())
-                {
-                    lcdChar.Foreground = foreground;
-                }
+                lcdChar.Foreground = foreground;
             }
 
             ScreenForeground = foreground;
@@ -123,54 +125,51 @@ namespace LCDSimulator.GUI
                 scaledContrast *= ContrastScaleSingleLine;
             }
 
-            foreach (StackPanel line in screenPanel.Children.OfType<StackPanel>())
+            foreach (Controls.LCDChar lcdChar in lcdCharacters)
             {
-                foreach (Controls.LCDChar lcdChar in line.Children.OfType<Controls.LCDChar>())
+                lcdChar.Contrast = scaledContrast;
+
+                bool[,] sourceArray = lcdChar.SecondLine
+                    ? Controller.SecondLineDots
+                    : Controller.FirstLineDots;
+                byte[] addressArray = lcdChar.SecondLine
+                    ? Controller.SecondLineDDRAMAddresses
+                    : Controller.FirstLineDDRAMAddresses;
+
+                if (Controller.TwoLineMode || !lcdChar.SecondLine)
                 {
-                    lcdChar.Contrast = scaledContrast;
+                    byte ddramAddress = addressArray[lcdChar.IndexOnLine];
+                    byte characterCode = Controller.DisplayDataRAM[ddramAddress, Controller.TwoLineMode];
 
-                    bool[,] sourceArray = lcdChar.SecondLine
-                        ? Controller.SecondLineDots
-                        : Controller.FirstLineDots;
-                    byte[] addressArray = lcdChar.SecondLine
-                        ? Controller.SecondLineDDRAMAddresses
-                        : Controller.FirstLineDDRAMAddresses;
-
-                    if (Controller.TwoLineMode || !lcdChar.SecondLine)
-                    {
-                        byte ddramAddress = addressArray[lcdChar.IndexOnLine];
-                        byte characterCode = Controller.DisplayDataRAM[ddramAddress, Controller.TwoLineMode];
-
-                        lcdChar.ToolTip = $"DDRAM address: {ddramAddress}\nCharacter code: {characterCode} ({characterCode:b8})";
-                    }
-                    else
-                    {
-                        lcdChar.ToolTip = null;
-                    }
-
-                    int startX = lcdChar.IndexOnLine * DisplayController.DotsPerCharacterWidth;
-
-                    for (int y = 0; y < DisplayController.DotsPerCharacterHeight; y++)
-                    {
-                        for (int x = 0; x < DisplayController.DotsPerCharacterWidth; x++)
-                        {
-                            // Dot should be completely invisible if it is on the second line in 1-line mode,
-                            // unless it is the bottom part of a character in extended height mode.
-                            bool invisible = !Controller.IsPowered
-                                || (!Controller.TwoLineMode && lcdChar.SecondLine
-                                    && (!Controller.ExtendedCharacterHeight
-                                        || y >= DisplayController.DotsInExtendedCharacterHeight));
-
-                            lcdChar.Dots[x, y] = invisible
-                                ? Controls.LCDChar.PixelState.Unpowered
-                                : sourceArray[startX + x, y]
-                                    ? Controls.LCDChar.PixelState.PoweredOn
-                                    : Controls.LCDChar.PixelState.PoweredOff;
-                        }
-                    }
-
-                    lcdChar.UpdateCharacter();
+                    lcdChar.ToolTip = $"DDRAM address: {ddramAddress}\nCharacter code: {characterCode} ({characterCode:b8})";
                 }
+                else
+                {
+                    lcdChar.ToolTip = null;
+                }
+
+                int startX = lcdChar.IndexOnLine * DisplayController.DotsPerCharacterWidth;
+
+                for (int y = 0; y < DisplayController.DotsPerCharacterHeight; y++)
+                {
+                    for (int x = 0; x < DisplayController.DotsPerCharacterWidth; x++)
+                    {
+                        // Dot should be completely invisible if it is on the second line in 1-line mode,
+                        // unless it is the bottom part of a character in extended height mode.
+                        bool invisible = !Controller.IsPowered
+                            || (!Controller.TwoLineMode && lcdChar.SecondLine
+                                && (!Controller.ExtendedCharacterHeight
+                                    || y >= DisplayController.DotsInExtendedCharacterHeight));
+
+                        lcdChar.Dots[x, y] = invisible
+                            ? Controls.LCDChar.PixelState.Unpowered
+                            : sourceArray[startX + x, y]
+                                ? Controls.LCDChar.PixelState.PoweredOn
+                                : Controls.LCDChar.PixelState.PoweredOff;
+                    }
+                }
+
+                lcdChar.UpdateCharacter();
             }
         }
 

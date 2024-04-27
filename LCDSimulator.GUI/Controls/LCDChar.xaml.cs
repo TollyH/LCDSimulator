@@ -15,7 +15,7 @@ namespace LCDSimulator.GUI.Controls
             PoweredOn
         }
 
-        public PixelState[,] Dots { get; }
+        public PixelState[,] Dots { get; } = new PixelState[5, 8];
 
         public bool SecondLine { get; set; }
         public int IndexOnLine { get; set; }
@@ -27,11 +27,20 @@ namespace LCDSimulator.GUI.Controls
             set => _contrast = Math.Clamp(value, 0, 1);
         }
 
+        private readonly Rectangle[,] dotRenderers = new Rectangle[5, 8];
+
         public LCDChar(bool secondLine, int indexOnLine)
         {
             InitializeComponent();
 
-            Dots = new PixelState[5, 8];
+            for (int y = 0; y < Dots.GetLength(1); y++)
+            {
+                StackPanel row = (StackPanel)dotPanel.Children[y];
+                for (int x = 0; x < Dots.GetLength(0); x++)
+                {
+                    dotRenderers[x, y] = (Rectangle)row.Children[x];
+                }
+            }
 
             SecondLine = secondLine;
             IndexOnLine = indexOnLine;
@@ -52,11 +61,9 @@ namespace LCDSimulator.GUI.Controls
         {
             for (int y = 0; y < Dots.GetLength(1); y++)
             {
-                StackPanel row = (StackPanel)dotPanel.Children[y];
                 for (int x = 0; x < Dots.GetLength(0); x++)
                 {
-                    Rectangle dot = (Rectangle)row.Children[x];
-                    dot.Opacity = CalculateOpacity(Dots[x, y]);
+                    dotRenderers[x, y].Opacity = CalculateOpacity(Dots[x, y]);
                 }
             }
         }
