@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LCDSimulator.GUI"
         mc:Ignorable="d"
-        Title="LCD Simulator" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
+        Title="LCD Simulator" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="190"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -94,13 +94,8 @@
         </Grid>
         <Border Grid.Row="1" Grid.Column="1" Margin="10" VerticalAlignment="Top" BorderThickness="2" BorderBrush="Gray">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.ColumnSpan="2" Content="Address Counter" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <Label x:Name="addressLocationLabel" Grid.Column="0" Content="DDRAM" VerticalAlignment="Top" Margin="5,20,0,0" Width="55"/>
-                <Label x:Name="addressCounterLabel" Grid.Column="1" Content="0 (00000000)" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5,20,0,0" Width="95"/>
+                <Label Content="Address Counter" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label x:Name="addressCounterLabel" Content="DDRAM | 0 (00000000)" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,20,0,0"/>
             </Grid>
         </Border>
     </Grid>
