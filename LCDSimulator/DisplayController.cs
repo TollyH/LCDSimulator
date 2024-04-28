@@ -312,7 +312,7 @@
                     }
                 }
 
-                if (!RegisterSelect || !ReadWrite)
+                if ((!RegisterSelect || ReadWrite) && !AwaitingSecondInstruction)
                 {
                     // This simulates the behaviour of real controllers when invalidly performing a
                     // RAM read operation directly after a RAM write.
