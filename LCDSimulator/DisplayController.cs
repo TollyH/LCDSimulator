@@ -80,10 +80,13 @@
             get => _enable;
             set
             {
-                if (_enable && !value)
+                if (!_enable && value)
                 {
-                    // Enable pin uses falling edge detection
-                    StartOperation();
+                    EnableRisingEdge();
+                }
+                else if (_enable && !value)
+                {
+                    EnableFallingEdge();
                 }
                 _enable = value;
             }
@@ -220,14 +223,24 @@
             UpdateRenderedDots();
         }
 
-        public void StartOperation()
+        private void EnableRisingEdge()
         {
-            if (!IsPowered)
+            // When reading, pins are set up once Enable pin goes high
+            if (!IsPowered || !ReadWrite)
             {
                 return;
             }
 
-            if (!RegisterSelect && ReadWrite)
+            if (RegisterSelect)
+            {
+                // Read RAM data
+                ProcessDataRead();
+
+                IncrementAddressCounter();
+
+                PendingLowerAddressRead = false;
+            }
+            else
             {
                 // Read busy flag and current address
                 byte readValue = (byte)(AddressCounter & DDRAMAddressMask);
@@ -245,7 +258,14 @@
                 {
                     DataBus = readValue;
                 }
+            }
+        }
 
+        private void EnableFallingEdge()
+        {
+            // Operations are run once Enable pin goes low
+            if (!IsPowered || (ReadWrite && !RegisterSelect))
+            {
                 return;
             }
 
@@ -255,13 +275,9 @@
 
             try
             {
-                if (RegisterSelect)
+                if (!ReadWrite)
                 {
-                    if (ReadWrite)
-                    {
-                        ProcessDataRead();
-                    }
-                    else
+                    if (RegisterSelect)
                     {
                         if (FourBitMode)
                         {
@@ -283,34 +299,34 @@
                             DataRegister = DataBus;
                             ProcessDataWrite();
                         }
-                    }
 
-                    if (!AwaitingSecondInstruction)
-                    {
-                        IncrementAddressCounter();
-                    }
-                }
-                else
-                {
-                    if (FourBitMode)
-                    {
-                        // In 4-bit mode, instruction register is updated one half at a time
-                        if (AwaitingSecondInstruction)
+                        if (!AwaitingSecondInstruction)
                         {
-                            InstructionRegister = (byte)((InstructionRegister & 0b11110000) | (DataBus >> 4));
-                            ProcessInstructionRegister();
-                            AwaitingSecondInstruction = false;
-                        }
-                        else
-                        {
-                            InstructionRegister = (byte)((InstructionRegister & 0b1111) | (DataBus & 0b11110000));
-                            AwaitingSecondInstruction = true;
+                            IncrementAddressCounter();
                         }
                     }
                     else
                     {
-                        InstructionRegister = DataBus;
-                        ProcessInstructionRegister();
+                        if (FourBitMode)
+                        {
+                            // In 4-bit mode, instruction register is updated one half at a time
+                            if (AwaitingSecondInstruction)
+                            {
+                                InstructionRegister = (byte)((InstructionRegister & 0b11110000) | (DataBus >> 4));
+                                ProcessInstructionRegister();
+                                AwaitingSecondInstruction = false;
+                            }
+                            else
+                            {
+                                InstructionRegister = (byte)((InstructionRegister & 0b1111) | (DataBus & 0b11110000));
+                                AwaitingSecondInstruction = true;
+                            }
+                        }
+                        else
+                        {
+                            InstructionRegister = DataBus;
+                            ProcessInstructionRegister();
+                        }
                     }
                 }
 
