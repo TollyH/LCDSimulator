@@ -227,6 +227,8 @@ namespace LCDSimulator.GUI
                 ? DisplayController.CGRAMAddressMask
                 : DisplayController.DDRAMAddressMask));
             addressCounterLabel.Content = $"{currentRAM} | {address} ({address:b8})";
+
+            instructionList.IsEnabled = !Controller.FourBitMode;
         }
 
         public void RefreshAllSimulatorComponents()
@@ -346,6 +348,27 @@ namespace LCDSimulator.GUI
         private void ContinuousRefreshItem_Unchecked(object sender, RoutedEventArgs e)
         {
             displayUpdateTimer.Stop();
+        }
+
+        private void screenBorder_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            instructionList.MaxHeight = screenBorder.ActualHeight;
+        }
+
+        private void instructionList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (instructionList.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            string[] pinComponents = ((string)((ListBoxItem)instructionList.SelectedItem).Tag).Split(' ');
+
+            Controller.RegisterSelect = pinComponents[0] != "0";
+            Controller.ReadWrite = pinComponents[1] != "0";
+            Controller.DataBus = Convert.ToByte(pinComponents[2], 2);
+
+            instructionList.SelectedIndex = -1;
         }
     }
 }

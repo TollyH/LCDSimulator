@@ -9,7 +9,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -53,7 +53,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Border x:Name="screenBorder" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9">
+            <Border x:Name="screenBorder" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Padding="44.25,27.1,39.15,21.9" SizeChanged="screenBorder_SizeChanged">
                 <StackPanel x:Name="screenPanel"/>
             </Border>
             <Rectangle x:Name="disabledBacklightOverlay" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Fill="#CC000000" Width="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=screenBorder, Mode=OneWay}" IsHitTestVisible="False"/>
@@ -96,6 +96,42 @@
             <Grid>
                 <Label Content="Address Counter" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <Label x:Name="addressCounterLabel" Content="DDRAM | 0 (00000000)" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,20,0,0"/>
+            </Grid>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" Margin="10,70,10,10" BorderThickness="2" BorderBrush="Gray">
+            <Grid>
+                <Label Content="Instruction List" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ListBox x:Name="instructionList" Margin="0,25,0,0" MaxHeight="49" SelectionChanged="instructionList_SelectionChanged" SelectionMode="Single" VirtualizingStackPanel.IsVirtualizing="False">
+                    <ListBoxItem Padding="5" Tag="0 0 00000001" Content="Clear display"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00000010" Content="Return home"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00000100" Content="Decrement cursor on read/write, don't shift screen"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00000101" Content="Decrement cursor on read/write, shift screen on write"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00000110" Content="Increment cursor on read/write, don't shift screen"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00000111" Content="Increment cursor on read/write, shift screen on write"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001000" Content="Disable display, cursor, and blink"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001001" Content="Disable display and cursor, enable blink"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001010" Content="Disable display and blink, enable cursor"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001011" Content="Disable display, enable cursor and blink"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001100" Content="Enable display, disable cursor and blink"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001101" Content="Enable display and blink, disable cursor"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001110" Content="Enable display and cursor, disable blink"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00001111" Content="Enable display, cursor, and blink"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00010000" Content="Move cursor left"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00010100" Content="Move cursor right"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00011000" Content="Shift display left"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00011100" Content="Shift display right"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00100000" Content="4-bit interface, 1-line, 5x8 font"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00100100" Content="4-bit interface, 1-line, 5x10 font"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00101000" Content="4-bit interface, 2-line, 5x8 font"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00110000" Content="8-bit interface, 1-line, 5x8 font"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00110100" Content="8-bit interface, 1-line, 5x10 font"/>
+                    <ListBoxItem Padding="5" Tag="0 0 00111000" Content="8-bit interface, 2-line, 5x8 font"/>
+                    <ListBoxItem Padding="5" Tag="0 0 01000000" Content="Set address in CGRAM (address in lowest 6 bits)"/>
+                    <ListBoxItem Padding="5" Tag="0 0 10000000" Content="Set address in DDRAM (address in lowest 7 bits)"/>
+                    <ListBoxItem Padding="5" Tag="1 0 00000000" Content="Write data"/>
+                    <ListBoxItem Padding="5" Tag="0 1 00000000" Content="Read busy flag and address counter"/>
+                    <ListBoxItem Padding="5" Tag="1 1 00000000" Content="Read data"/>
+                </ListBox>
             </Grid>
         </Border>
     </Grid>
