@@ -366,7 +366,22 @@ namespace LCDSimulator.GUI
 
             Controller.RegisterSelect = pinComponents[0] != "0";
             Controller.ReadWrite = pinComponents[1] != "0";
-            Controller.DataBus = Convert.ToByte(pinComponents[2], 2);
+
+            if (ReferenceEquals(instructionList.SelectedItem, writeDataItem) && !Controller.AddressingCharacterGeneratorRAM)
+            {
+                CharacterSelector selector = new()
+                {
+                    Owner = this
+                };
+                if (selector.ShowDialog() ?? false)
+                {
+                    Controller.DataBus = selector.SelectedCharacterCode;
+                }
+            }
+            else
+            {
+                Controller.DataBus = Convert.ToByte(pinComponents[2], 2);
+            }
 
             instructionList.SelectedIndex = -1;
         }

@@ -128,7 +128,7 @@
                     <ListBoxItem Padding="5" Tag="0 0 00111000" Content="8-bit interface, 2-line, 5x8 font"/>
                     <ListBoxItem Padding="5" Tag="0 0 01000000" Content="Set address in CGRAM (address in lowest 6 bits)"/>
                     <ListBoxItem Padding="5" Tag="0 0 10000000" Content="Set address in DDRAM (address in lowest 7 bits)"/>
-                    <ListBoxItem Padding="5" Tag="1 0 00000000" Content="Write data"/>
+                    <ListBoxItem x:Name="writeDataItem" Padding="5" Tag="1 0 00000000" Content="Write data"/>
                     <ListBoxItem Padding="5" Tag="0 1 00000000" Content="Read busy flag and address counter"/>
                     <ListBoxItem Padding="5" Tag="1 1 00000000" Content="Read data"/>
                 </ListBox>

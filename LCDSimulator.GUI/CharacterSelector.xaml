@@ -1,0 +1,81 @@
+﻿<Window x:Class="LCDSimulator.GUI.CharacterSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LCDSimulator.GUI"
+        mc:Ignorable="d"
+        Title="Character Selector" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
+    <Grid x:Name="selectorGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="1" FontWeight="Bold" Content="xxxx0000"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="2" FontWeight="Bold" Content="xxxx0001"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="3" FontWeight="Bold" Content="xxxx0010"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="4" FontWeight="Bold" Content="xxxx0011"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="5" FontWeight="Bold" Content="xxxx0100"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="6" FontWeight="Bold" Content="xxxx0101"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="7" FontWeight="Bold" Content="xxxx0110"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="8" FontWeight="Bold" Content="xxxx0111"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="9" FontWeight="Bold" Content="xxxx1000"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="10" FontWeight="Bold" Content="xxxx1001"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="11" FontWeight="Bold" Content="xxxx1010"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="12" FontWeight="Bold" Content="xxxx1011"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="13" FontWeight="Bold" Content="xxxx1100"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="14" FontWeight="Bold" Content="xxxx1101"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="15" FontWeight="Bold" Content="xxxx1110"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="16" FontWeight="Bold" Content="xxxx1111"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1" FontWeight="Bold" Content="0000" Foreground="Green"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="2" FontWeight="Bold" Content="0001"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="3" FontWeight="Bold" Content="0010"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="4" FontWeight="Bold" Content="0011"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="5" FontWeight="Bold" Content="0100"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="6" FontWeight="Bold" Content="0101"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="7" FontWeight="Bold" Content="0110"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="8" FontWeight="Bold" Content="0111"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="9" FontWeight="Bold" Content="1000"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="10" FontWeight="Bold" Content="1001"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="11" FontWeight="Bold" Content="1010"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="12" FontWeight="Bold" Content="1011"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="13" FontWeight="Bold" Content="1100"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="14" FontWeight="Bold" Content="1101"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="15" FontWeight="Bold" Content="1110" Foreground="Salmon"/>
+        <Label Padding="5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="16" FontWeight="Bold" Content="1111" Foreground="Salmon"/>
+    </Grid>
+</Window>
