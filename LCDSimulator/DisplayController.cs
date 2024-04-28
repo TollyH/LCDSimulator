@@ -122,7 +122,7 @@
                     // Move onto next/previous line
                     else if (TwoLineMode && ddramAddress is >= CharactersPerLine and < SecondLineStartAddress)
                     {
-                        value = (byte)(IncrementOnReadWrite ? SecondLineStartAddress : CharactersPerLine - 1);
+                        value = (byte)(value > _addressCounter ? SecondLineStartAddress : CharactersPerLine - 1);
                     }
                 }
                 _addressCounter = value;
