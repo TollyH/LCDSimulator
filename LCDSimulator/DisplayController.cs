@@ -625,10 +625,10 @@
         {
             FourBitMode = (InstructionRegister & 0b10000) == 0;
 
-            CurrentDisplayFunction = (InstructionRegister & 0b100) != 0
-                ? DisplayFunction.OneLine5x10
-                : (InstructionRegister & 0b1000) != 0
-                    ? DisplayFunction.TwoLine5x8
+            CurrentDisplayFunction = (InstructionRegister & 0b1000) != 0
+                ? DisplayFunction.TwoLine5x8
+                : (InstructionRegister & 0b100) != 0
+                    ? DisplayFunction.OneLine5x10
                     : DisplayFunction.OneLine5x8;
 
             // This will ensure that address counter is still a valid value
