@@ -72,6 +72,8 @@
             }
         }
 
+        public bool Backlight { get; set; }
+
         private bool _enable = false;
         public bool Enable
         {

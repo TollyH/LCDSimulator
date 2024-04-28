@@ -113,6 +113,10 @@ namespace LCDSimulator.GUI
 
         public void RefreshDisplayCharacters()
         {
+            disabledBacklightOverlay.Visibility = Controller.Backlight
+                ? Visibility.Hidden
+                : Visibility.Visible;
+
             Controller.UpdateRenderedDots();
 
             double scaledContrast = Contrast;
@@ -216,7 +220,7 @@ namespace LCDSimulator.GUI
                 d3PinIndicator.Opacity = 1;
             }
 
-            aPinIndicator.Fill = disabledBacklightOverlay.Visibility == Visibility.Visible ? pinIndicatorFillLow : pinIndicatorFillHigh;
+            aPinIndicator.Fill = Controller.Backlight ? pinIndicatorFillHigh : pinIndicatorFillLow;
         }
 
         public void RefreshInternalInfoDisplays()
@@ -325,9 +329,7 @@ namespace LCDSimulator.GUI
 
         private void aPinIndicator_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            disabledBacklightOverlay.Visibility = disabledBacklightOverlay.Visibility == Visibility.Visible
-                ? Visibility.Hidden
-                : Visibility.Visible;
+            Controller.Backlight = !Controller.Backlight;
             RefreshAllSimulatorComponents();
         }
 
