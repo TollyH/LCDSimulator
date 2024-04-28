@@ -236,7 +236,10 @@
                 // Read RAM data
                 ProcessDataRead();
 
-                IncrementAddressCounter();
+                if (!AwaitingSecondInstruction)
+                {
+                    IncrementAddressCounter();
+                }
 
                 PendingLowerAddressRead = false;
             }
