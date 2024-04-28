@@ -104,17 +104,18 @@
             {
                 if (!AddressingCharacterGeneratorRAM)
                 {
+                    byte ddramAddress = (byte)(value & DDRAMAddressMask);
                     // Wrap around once end of character data is reached
-                    if ((value & DDRAMAddressMask) == DDRAMAddressMask)
+                    if (ddramAddress == DDRAMAddressMask)
                     {
                         value = CurrentDDRAMAddressLimit;
                     }
-                    else if ((value & DDRAMAddressMask) > CurrentDDRAMAddressLimit)
+                    else if (ddramAddress > CurrentDDRAMAddressLimit)
                     {
                         value = 0;
                     }
                     // Move onto next/previous line
-                    if (TwoLineMode && value is >= CharactersPerLine and < SecondLineStartAddress)
+                    else if (TwoLineMode && ddramAddress is >= CharactersPerLine and < SecondLineStartAddress)
                     {
                         value = (byte)(IncrementOnReadWrite ? SecondLineStartAddress : CharactersPerLine - 1);
                     }
