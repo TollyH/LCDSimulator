@@ -45,7 +45,7 @@
             </MenuItem>
             <MenuItem Header="Options">
                 <MenuItem Header="Continuous display refresh (required for blink)" IsCheckable="True" IsChecked="True" Checked="ContinuousRefreshItem_Checked" Unchecked="ContinuousRefreshItem_Unchecked"/>
-                <MenuItem Header="Show console window" IsCheckable="True" Checked="ConsoleItem_Checked" Unchecked="ConsoleItem_Unchecked"/>
+                <MenuItem x:Name="consoleItem" Header="Show console window" IsCheckable="True" Checked="consoleItem_Checked" Unchecked="consoleItem_Unchecked"/>
             </MenuItem>
         </Menu>
         <Grid Grid.Column="0" Grid.Row="1">

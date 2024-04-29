@@ -42,10 +42,17 @@ namespace LCDSimulator.GUI
 
         public MainWindow()
         {
+            InitializeComponent();
+
             ConsoleWindow.Create();
             ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Hidden);
 
-            InitializeComponent();
+            if (Console.IsOutputRedirected || Console.IsInputRedirected)
+            {
+                // If another process has control of stdout and stdin after creating a console,
+                // the console will be non-functional, so hide the option to show it.
+                consoleItem.Visibility = Visibility.Collapsed;
+            }
 
             MenuItem firstColorItem = colorMenu.Items.OfType<MenuItem>().First();
 
@@ -397,12 +404,12 @@ namespace LCDSimulator.GUI
             instructionList.SelectedIndex = -1;
         }
 
-        private void ConsoleItem_Checked(object sender, RoutedEventArgs e)
+        private void consoleItem_Checked(object sender, RoutedEventArgs e)
         {
             ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Visible);
         }
 
-        private void ConsoleItem_Unchecked(object sender, RoutedEventArgs e)
+        private void consoleItem_Unchecked(object sender, RoutedEventArgs e)
         {
             ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Hidden);
         }
