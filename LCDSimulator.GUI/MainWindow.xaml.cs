@@ -44,12 +44,15 @@ namespace LCDSimulator.GUI
         {
             InitializeComponent();
 
+            bool logInstructions = Environment.GetCommandLineArgs().Contains("--log", StringComparer.OrdinalIgnoreCase);
+
             ConsoleWindow.Create();
             ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Hidden);
 
-            if (Console.IsOutputRedirected || Console.IsInputRedirected)
+            if (Console.IsOutputRedirected && Console.IsInputRedirected
+                && (Console.IsErrorRedirected || !logInstructions))
             {
-                // If another process has control of stdout and stdin after creating a console,
+                // If another process has control of all stdio after creating a console,
                 // the console will be non-functional, so hide the option to show it.
                 consoleItem.Visibility = Visibility.Collapsed;
             }
@@ -60,6 +63,12 @@ namespace LCDSimulator.GUI
             ScreenBackground = firstColorItem.Background;
 
             Controller = new DisplayController();
+
+            if (logInstructions)
+            {
+                // Only register logging handler if "--log" command line argument is given
+                Controller.Executed += Controller_Executed;
+            }
 
             commandLineInterface = new CLI.CommandLine(new CLI.DisplayInterface(Controller));
 
@@ -425,6 +434,17 @@ namespace LCDSimulator.GUI
         private void commandLineInterface_TextWritten(CLI.CommandLine sender, string text)
         {
             Dispatcher.Invoke(RefreshAllSimulatorComponents);
+        }
+
+        private void Controller_Executed(DisplayController controller)
+        {
+            string description = Strings.InstructionDescriptions.Where(kv =>
+                kv.Key.RS == Controller.RegisterSelect
+                && kv.Key.RW == Controller.ReadWrite
+                && kv.Key.Data == (Controller.DataBus & kv.Key.Mask)).Select(kv => kv.Value).FirstOrDefault("UNKNOWN");
+            Console.Error.WriteLine(
+                $"RS:{(Controller.RegisterSelect ? 1 : 0)} RW:{(Controller.ReadWrite ? 1 : 0)} D:{Controller.DataBus:b8} " +
+                $"| {description}");
         }
     }
 }

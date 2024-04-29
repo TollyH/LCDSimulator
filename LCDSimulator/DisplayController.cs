@@ -177,6 +177,10 @@
         public readonly byte[] CursorPixels5x8 = Characters.GetImageData(Characters.GetImagePath(Characters.Cursor5x8));
         public readonly byte[] CursorPixels5x11 = Characters.GetImageData(Characters.GetImagePath(Characters.Cursor5x11));
 
+        public delegate void DisplayEventHandler(DisplayController controller);
+
+        public event DisplayEventHandler? Executed;
+
         private readonly CursorBlink blinkController = new();
 
         public DisplayController()
@@ -263,6 +267,8 @@
                     DataBus = readValue;
                 }
             }
+
+            Executed?.Invoke(this);
         }
 
         private void EnableFallingEdge()
@@ -349,6 +355,11 @@
             }
 
             UpdateRenderedDots();
+
+            if (!ReadWrite)
+            {
+                Executed?.Invoke(this);
+            }
         }
 
         public void UpdateRenderedDots()
