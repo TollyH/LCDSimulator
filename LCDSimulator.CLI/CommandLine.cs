@@ -41,6 +41,12 @@
                     continue;
                 }
 
+                if (Console.IsInputRedirected && Console.IsOutputRedirected)
+                {
+                    // Echo input back if both IO streams are redirected (this makes virtual terminals easier)
+                    Console.WriteLine(input);
+                }
+
                 if (input[0] == '#')
                 {
                     // Command
