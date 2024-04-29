@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LCDSimulator.CLI\LCDSimulator.CLI.csproj" />
     <ProjectReference Include="..\LCDSimulator\LCDSimulator.csproj" />
   </ItemGroup>
 

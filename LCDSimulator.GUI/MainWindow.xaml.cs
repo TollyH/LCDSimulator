@@ -29,6 +29,8 @@ namespace LCDSimulator.GUI
             set => _contrast = Math.Clamp(value, 0, 1);
         }
 
+        private readonly CLI.CommandLine commandLineInterface;
+
         private bool runUncheckHandler = true;
 
         private readonly List<Controls.LCDChar> lcdCharacters = new();
@@ -40,6 +42,9 @@ namespace LCDSimulator.GUI
 
         public MainWindow()
         {
+            ConsoleWindow.Create();
+            ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Hidden);
+
             InitializeComponent();
 
             MenuItem firstColorItem = colorMenu.Items.OfType<MenuItem>().First();
@@ -48,6 +53,8 @@ namespace LCDSimulator.GUI
             ScreenBackground = firstColorItem.Background;
 
             Controller = new DisplayController();
+
+            commandLineInterface = new CLI.CommandLine(new CLI.DisplayInterface(Controller));
 
             displayUpdateTimer.Elapsed += displayUpdateTimer_Elapsed;
         }
@@ -284,6 +291,8 @@ namespace LCDSimulator.GUI
         {
             colorMenu.Items.OfType<MenuItem>().First().IsChecked = true;
             sizeMenu.Items.OfType<MenuItem>().First().IsChecked = true;
+
+            _ = Task.Run(commandLineInterface.StartCLI);
         }
 
         private void displayUpdateTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -386,6 +395,16 @@ namespace LCDSimulator.GUI
             }
 
             instructionList.SelectedIndex = -1;
+        }
+
+        private void ConsoleItem_Checked(object sender, RoutedEventArgs e)
+        {
+            ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Visible);
+        }
+
+        private void ConsoleItem_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Hidden);
         }
     }
 }

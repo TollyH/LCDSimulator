@@ -18,7 +18,12 @@
             {
                 Console.Write(prompt);
 
-                string input = Console.ReadLine() ?? "";
+                string? input = Console.ReadLine();
+
+                if (input is null)
+                {
+                    continue;
+                }
 
                 if (input.Length == 0)
                 {
