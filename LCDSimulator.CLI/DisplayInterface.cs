@@ -241,6 +241,14 @@ namespace LCDSimulator.CLI
         }
 
         /// <summary>
+        /// Turn the display on or off.
+        /// </summary>
+        public void Power(bool power)
+        {
+            Controller.IsPowered = power;
+        }
+
+        /// <summary>
         /// Turn the display backlight on or off.
         /// </summary>
         public void Backlight(bool power)

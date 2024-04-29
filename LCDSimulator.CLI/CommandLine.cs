@@ -42,6 +42,9 @@
                     {
                         case "#exit":
                             return;
+                        case "#power":
+                            CommandPower(args);
+                            break;
                         case "#help":
                             CommandHelp(args);
                             break;
@@ -118,6 +121,7 @@
                 + "Write any text not prefixed with # to write it to the display\n"
                 + "\nList of commands:\n"
                 + "    #exit - Quit the CLI\n"
+                + "    #power 0/1 - Set the display power on (1) or off (0)\n"
                 + $"    #set_size [1-{maxScreenHeight}] [1-{maxScreenWidth}] - Set the number of lines and columns the display has\n"
                 + "    #init 1/2 8/11 - Initialise the screen in (1)/(2) line mode with 5x(8) or 5x(11) font\n"
                 + "    #set 0/1 0/1 0/1 - Set whether the display, cursor, and blinking are on (1) or off (0)\n"
@@ -136,6 +140,31 @@
                 + "    #raw_tx 0/1 <data> - (ADVANCED) Transmit raw data to the LCD module, with RS pin on (1) or off (0)\n"
                 + "        <data> is an 8-bit binary number, going from D7-D0\n"
                 + "    #raw_rx 0/1 - (ADVANCED) Receive raw data from the LCD module, with RS pin on (1) or off (0)");
+        }
+
+        private void CommandPower(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("The #power command requires one argument.");
+                return;
+            }
+
+            bool power;
+            switch (args[0])
+            {
+                case "0":
+                    power = false;
+                    break;
+                case "1":
+                    power = true;
+                    break;
+                default:
+                    Console.WriteLine("The first argument to the #power command must be 0 or 1.");
+                    return;
+            }
+
+            displayInterface.Power(power);
         }
 
         private void CommandSetSize(string[] args)
