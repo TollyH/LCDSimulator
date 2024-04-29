@@ -41,9 +41,9 @@
                     continue;
                 }
 
-                if (Console.IsInputRedirected && Console.IsOutputRedirected)
+                if (Console.IsInputRedirected)
                 {
-                    // Echo input back if both IO streams are redirected (this makes virtual terminals easier)
+                    // Echo input back if stdin is redirected (this makes virtual terminals easier)
                     Console.WriteLine(input);
                 }
 
