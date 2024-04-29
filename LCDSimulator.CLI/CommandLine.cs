@@ -30,6 +30,8 @@
 
                 if (input is null)
                 {
+                    // Prevent excessive CPU usage when waiting for input
+                    Thread.Sleep(100);
                     continue;
                 }
 
