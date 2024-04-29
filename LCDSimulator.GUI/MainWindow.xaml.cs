@@ -63,6 +63,9 @@ namespace LCDSimulator.GUI
 
             commandLineInterface = new CLI.CommandLine(new CLI.DisplayInterface(Controller));
 
+            commandLineInterface.CommandProcessed += commandLineInterface_CommandProcessed;
+            commandLineInterface.TextWritten += commandLineInterface_TextWritten;
+
             displayUpdateTimer.Elapsed += displayUpdateTimer_Elapsed;
         }
 
@@ -412,6 +415,16 @@ namespace LCDSimulator.GUI
         private void consoleItem_Unchecked(object sender, RoutedEventArgs e)
         {
             ConsoleWindow.SetVisibility(ConsoleWindow.Visibility.Hidden);
+        }
+
+        private void commandLineInterface_CommandProcessed(CLI.CommandLine sender, string command, string[] args)
+        {
+            Dispatcher.Invoke(RefreshAllSimulatorComponents);
+        }
+
+        private void commandLineInterface_TextWritten(CLI.CommandLine sender, string text)
+        {
+            Dispatcher.Invoke(RefreshAllSimulatorComponents);
         }
     }
 }

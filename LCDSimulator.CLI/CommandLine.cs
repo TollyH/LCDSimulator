@@ -8,6 +8,14 @@
         private const byte maxScreenHeight = 4;
         private const byte maxScreenChars = 80;
 
+        public delegate void CommandEventHandler(CommandLine sender, string command, string[] args);
+        public delegate void TextEventHandler(CommandLine sender, string text);
+
+        public event CommandEventHandler? CommandProcessed;
+        public event TextEventHandler? TextWritten;
+
+        public DisplayInterface LCDInterface { get; } = displayInterface;
+
         private LCDSize size = new(16, 2);
 
         public void StartCLI()
@@ -100,11 +108,15 @@
                             Console.WriteLine($"\"{command}\" is not a recognised command. Run #help to see all available commands.");
                             break;
                     }
+
+                    CommandProcessed?.Invoke(this, command, args);
                 }
                 else
                 {
                     // Text
-                    displayInterface.Write(size, input);
+                    LCDInterface.Write(size, input);
+
+                    TextWritten?.Invoke(this, input);
                 }
             }
         }
@@ -164,7 +176,7 @@
                     return;
             }
 
-            displayInterface.Power(power);
+            LCDInterface.Power(power);
         }
 
         private void CommandSetSize(string[] args)
@@ -233,7 +245,7 @@
                     return;
             }
 
-            displayInterface.InitialiseDisplay(lines, font);
+            LCDInterface.InitialiseDisplay(lines, font);
         }
 
         private void CommandSet(string[] args)
@@ -286,7 +298,7 @@
                     return;
             }
 
-            displayInterface.DisplaySet(display, cursor, blink);
+            LCDInterface.DisplaySet(display, cursor, blink);
         }
 
         private void CommandClear(string[] args)
@@ -297,7 +309,7 @@
                 return;
             }
 
-            displayInterface.Clear();
+            LCDInterface.Clear();
         }
 
         private void CommandHome(string[] args)
@@ -308,7 +320,7 @@
                 return;
             }
 
-            displayInterface.Home();
+            LCDInterface.Home();
         }
 
         private void CommandScroll(string[] args)
@@ -347,7 +359,7 @@
                     return;
             }
 
-            displayInterface.Scroll(cursorScreen, leftRight);
+            LCDInterface.Scroll(cursorScreen, leftRight);
         }
 
         private void CommandBacklight(string[] args)
@@ -372,7 +384,7 @@
                     return;
             }
 
-            displayInterface.Backlight(backlight);
+            LCDInterface.Backlight(backlight);
         }
 
         private void CommandDefCustom(string[] args)
@@ -417,7 +429,7 @@
                 }
             }
 
-            displayInterface.DefineCustomChar(characterIndex, pixels);
+            LCDInterface.DefineCustomChar(characterIndex, pixels);
         }
 
         private void CommandWriteCustom(string[] args)
@@ -441,8 +453,8 @@
                 return;
             }
 
-            // displayInterface.Write uses 1-based indexing
-            displayInterface.Write(size, ((char)(characterIndex + 1)).ToString());
+            // LCDInterface.Write uses 1-based indexing
+            LCDInterface.Write(size, ((char)(characterIndex + 1)).ToString());
         }
 
         private void CommandReadCustom(string[] args)
@@ -466,7 +478,7 @@
                 return;
             }
 
-            byte[] pixels = displayInterface.GetCustomChar(characterIndex);
+            byte[] pixels = LCDInterface.GetCustomChar(characterIndex);
             foreach (byte row in pixels)
             {
                 Console.Write($"{row:b5} ");
@@ -482,7 +494,7 @@
                 return;
             }
 
-            displayInterface.Write(size, "\n");
+            LCDInterface.Write(size, "\n");
         }
 
         private void CommandSetpos(string[] args)
@@ -507,7 +519,7 @@
                 return;
             }
 
-            displayInterface.SetCursorPosition(size, new LCDPosition(line, offset));
+            LCDInterface.SetCursorPosition(size, new LCDPosition(line, offset));
         }
 
         private void CommandGetpos(string[] args)
@@ -518,7 +530,7 @@
                 return;
             }
 
-            LCDPosition position = displayInterface.GetCursorPosition(size);
+            LCDPosition position = LCDInterface.GetCursorPosition(size);
             Console.WriteLine($"line: {position.Line + 1}, offset: {position.Offset}");
         }
 
@@ -530,7 +542,7 @@
                 return;
             }
 
-            string readString = displayInterface.Read(size);
+            string readString = LCDInterface.Read(size);
             for (int i = 0; i < readString.Length; i++)
             {
                 char c = readString[i];
@@ -582,7 +594,7 @@
                 return;
             }
 
-            displayInterface.TransmitData(rsPin, data);
+            LCDInterface.TransmitData(rsPin, data);
         }
 
         private void CommandRawRx(string[] args)
@@ -607,7 +619,7 @@
                     return;
             }
 
-            byte data = displayInterface.ReceiveData(rsPin, true);
+            byte data = LCDInterface.ReceiveData(rsPin, true);
             Console.WriteLine($"{data:b8} (0x{data:x2}) ({data})");
         }
     }
