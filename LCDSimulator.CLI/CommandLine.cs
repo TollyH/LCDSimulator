@@ -413,7 +413,7 @@
             }
 
             // displayInterface.Write uses 1-based indexing
-            displayInterface.Write(size, $"{(char)characterIndex + 1}");
+            displayInterface.Write(size, ((char)(characterIndex + 1)).ToString());
         }
 
         private void CommandReadCustom(string[] args)
