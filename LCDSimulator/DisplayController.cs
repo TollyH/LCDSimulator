@@ -82,13 +82,14 @@
             {
                 if (!_enable && value)
                 {
+                    _enable = value;
                     EnableRisingEdge();
                 }
                 else if (_enable && !value)
                 {
+                    _enable = value;
                     EnableFallingEdge();
                 }
-                _enable = value;
             }
         }
 

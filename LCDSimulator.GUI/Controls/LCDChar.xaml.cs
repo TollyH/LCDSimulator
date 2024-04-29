@@ -29,6 +29,9 @@ namespace LCDSimulator.GUI.Controls
 
         private readonly Rectangle[,] dotRenderers = new Rectangle[5, 8];
 
+        private readonly PixelState[,] lastStates = new PixelState[5, 8];
+        private double lastContrast = 0;
+
         public LCDChar(bool secondLine, int indexOnLine)
         {
             InitializeComponent();
@@ -45,7 +48,7 @@ namespace LCDSimulator.GUI.Controls
             SecondLine = secondLine;
             IndexOnLine = indexOnLine;
 
-            UpdateCharacter();
+            UpdateCharacter(true);
         }
 
         public double CalculateOpacity(PixelState state)
@@ -57,15 +60,24 @@ namespace LCDSimulator.GUI.Controls
             return Math.Clamp((state == PixelState.PoweredOn ? 0.9 : 0.1) + ((Contrast - 0.5) * 2), 0, 1);
         }
 
-        public void UpdateCharacter()
+        public void UpdateCharacter(bool force = false)
         {
+            bool updateAll = force || Contrast != lastContrast;
+
             for (int y = 0; y < Dots.GetLength(1); y++)
             {
                 for (int x = 0; x < Dots.GetLength(0); x++)
                 {
-                    dotRenderers[x, y].Opacity = CalculateOpacity(Dots[x, y]);
+                    PixelState newState = Dots[x, y];
+                    if (updateAll || newState != lastStates[x, y])
+                    {
+                        lastStates[x, y] = newState;
+                        dotRenderers[x, y].Opacity = CalculateOpacity(newState);
+                    }
                 }
             }
+
+            lastContrast = Contrast;
         }
     }
 }

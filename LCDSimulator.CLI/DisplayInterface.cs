@@ -23,7 +23,7 @@ namespace LCDSimulator.CLI
         /// </summary>
         public bool IsBusy()
         {
-            return Controller.IsPowered && (ReceiveData(false, false) & 0b10000000) != 0;
+            return Controller.IsPowered && (ReceiveData(false) & 0b10000000) != 0;
         }
 
         /// <summary>
@@ -34,14 +34,9 @@ namespace LCDSimulator.CLI
         /// <see langword="true"/> to read CGRAM/DDRAM data.
         /// <see langword="false"/> gets current address and busy flag,
         /// which should instead be retrieved with the <see cref="IsBusy"/> and <see cref="GetAddress"/> methods.</param>
-        /// <param name="waitForNotBusy">
-        /// Should be <see langword="true"/> unless the purpose of the call is to check the busy flag.
-        /// </param>
         /// <returns></returns>
-        public byte ReceiveData(bool registerSelect, bool waitForNotBusy)
+        public byte ReceiveData(bool registerSelect)
         {
-            while (waitForNotBusy && IsBusy()) { }
-
             Controller.ReadWrite = true;
             Controller.RegisterSelect = registerSelect;
 
@@ -98,7 +93,7 @@ namespace LCDSimulator.CLI
                 {
                     // Get character data
                     // (display will automatically move to next character)
-                    byte data = ReceiveData(true, true);
+                    byte data = ReceiveData(true);
                     if (data <= 7)
                     {
                         // Convert 0-indexed custom character to 1-indexed
@@ -137,7 +132,7 @@ namespace LCDSimulator.CLI
             {
                 // Get character line data
                 // (display will automatically move to next line in character)
-                pixels[i] = ReceiveData(true, true);
+                pixels[i] = ReceiveData(true);
             }
 
             // Restore DDRAM address
@@ -152,8 +147,6 @@ namespace LCDSimulator.CLI
         /// </summary>
         public void TransmitData(bool registerSelect, byte data)
         {
-            while (IsBusy()) { }
-
             Controller.ReadWrite = false;
             Controller.RegisterSelect = registerSelect;
 
@@ -344,7 +337,7 @@ namespace LCDSimulator.CLI
 
         private byte GetAddress()
         {
-            return (byte)(ReceiveData(false, true) & 0b1111111);
+            return (byte)(ReceiveData(false) & 0b1111111);
         }
 
         private void SetDDRAMAddress(byte address)

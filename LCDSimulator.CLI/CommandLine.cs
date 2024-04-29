@@ -627,7 +627,7 @@
                     return;
             }
 
-            byte data = LCDInterface.ReceiveData(rsPin, true);
+            byte data = LCDInterface.ReceiveData(rsPin);
             Console.WriteLine($"{data:b8} (0x{data:x2}) ({data})");
         }
     }
