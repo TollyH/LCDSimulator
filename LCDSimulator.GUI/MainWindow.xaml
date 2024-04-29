@@ -59,7 +59,8 @@
             </Border>
             <Rectangle x:Name="disabledBacklightOverlay" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="10" Fill="#CC000000" Width="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=screenBorder, Mode=OneWay}" IsHitTestVisible="False"/>
             <StackPanel Grid.Row="1" Margin="10,0,10,5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}">
-                <Ellipse x:Name="vddPinIndicator" Margin="5,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="vddPinIndicator_MouseUp"/>
+                <Ellipse Margin="5,0,3,0" StrokeThickness="2" Stroke="Black" Fill="Gray" Width="22" Height="22" VerticalAlignment="Top"/>
+                <Ellipse x:Name="vddPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="vddPinIndicator_MouseUp"/>
                 <Ellipse x:Name="voPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseWheel="voPinIndicator_MouseWheel" MouseUp="voPinIndicator_MouseUp"/>
                 <Ellipse x:Name="rsPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="rsPinIndicator_MouseUp"/>
                 <Ellipse x:Name="rwPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="rwPinIndicator_MouseUp"/>
@@ -72,10 +73,13 @@
                 <Ellipse x:Name="d5PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="5"/>
                 <Ellipse x:Name="d6PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="6"/>
                 <Ellipse x:Name="d7PinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="DataPinIndicator_MouseUp" Tag="7"/>
-                <Ellipse x:Name="aPinIndicator" Margin="3,0,5,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="aPinIndicator_MouseUp"/>
+                <Ellipse x:Name="aPinIndicator" Margin="3,0,3,0" StrokeThickness="2" Stroke="Black" Width="22" Height="22" VerticalAlignment="Top" MouseUp="aPinIndicator_MouseUp"/>
+                <Ellipse Margin="3,0,5,0" StrokeThickness="2" Stroke="Black" Fill="Gray" Width="22" Height="22" VerticalAlignment="Top"/>
             </StackPanel>
             <StackPanel Grid.Row="2" Margin="10,0,10,10" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" MinWidth="{Binding ActualWidth, ElementName=screenBorder, Mode=OneWay}">
                 <Label Margin="5,0,0,0" Width="11" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Right" Content="V"/>
+                <Label Margin="0,0,3,0" Width="11" Height="10" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Content="SS" FontSize="8"/>
+                <Label Margin="3,0,0,0" Width="11" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Right" Content="V"/>
                 <Label Margin="0,0,3,0" Width="11" Height="10" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Content="DD" FontSize="8"/>
                 <Label Margin="3,0,0,0" Width="11" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Right" Content="V"/>
                 <Label Margin="0,0,3,0" Width="11" Height="10" VerticalAlignment="Center" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Content="O" FontSize="8"/>
@@ -90,7 +94,8 @@
                 <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D5"/>
                 <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D6"/>
                 <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="D7"/>
-                <Label Margin="3,0,5,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="A"/>
+                <Label Margin="3,0,3,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="A"/>
+                <Label Margin="3,0,5,0" Width="22" Height="22" VerticalAlignment="Top" Padding="0" HorizontalContentAlignment="Center" Content="K"/>
             </StackPanel>
         </Grid>
         <Border Grid.Row="1" Grid.Column="1" Margin="10" VerticalAlignment="Top" BorderThickness="2" BorderBrush="Gray">
