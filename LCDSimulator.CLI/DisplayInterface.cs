@@ -23,7 +23,7 @@ namespace LCDSimulator.CLI
         /// </summary>
         public bool IsBusy()
         {
-            return (ReceiveData(false, false) & 0b10000000) != 0;
+            return Controller.IsPowered && (ReceiveData(false, false) & 0b10000000) != 0;
         }
 
         /// <summary>
